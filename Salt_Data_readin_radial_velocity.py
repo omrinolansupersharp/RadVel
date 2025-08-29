@@ -15,8 +15,6 @@
 # img = Image.open("/data/wdplanetary/omri/Output/Gaussianline/blue/MgII_4481/MgII_4481_2020-07-30 00:00:00.png")
 # display(img)
 
-# In[56]:
-
 
 # importing
 import numpy as np
@@ -82,8 +80,6 @@ initial_settings = {
 }
 plt.rcParams.update(default_settings)
 
-
-# In[57]:
 
 
 def read_mike_spec(filename):
