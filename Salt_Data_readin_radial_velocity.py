@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[55]:
-
-
 # Radial velocity shifts from SALT spectral data imports
 
 
@@ -240,10 +237,6 @@ plt.plot(wav[8],snr[8])
 plt.xlim(4475,4485)
 plt.show() """
 
-
-# In[58]:
-
-
 # salt read in data
 def Get_Wavelength_Flux_File(filename):
     # Get the wavelength and flux from a MIDAS pipeline file
@@ -278,12 +271,7 @@ def Get_Wavelength_Flux_File(filename):
 
     return wavelength, flux, time, OBJECT
 
-
-# In[59]:
-
-
 io_noise = []
-
 # dictionary for all the inter-order noise areas for the SALT blue spectrum
 # manually removing them
 io_noise.append((3890, 3910))
@@ -334,9 +322,6 @@ io_noise.append((5765, 5779))
 # hdulist = fits.open("/data/wdplanetary/omri/Data/WD1929+012/2017-1-SCI-031.20170706/product/mbgphH201707060019_u2wm.fits")
 # header = hdulist[0].header
 # print(header)
-
-# In[61]:
-
 
 # line dictionaries: Name, position(A), present?, log gf
 p_lines = []
@@ -404,12 +389,10 @@ sky_lines.append(("OI_6364", 6363.776))
 # for i in b_files:
 #     print(i)
 
-# In[ ]:
-
 
 wav, flux, time, OBJECT = Get_Wavelength_Flux_File(
-    "/data/wdplanetary/omri/Data/WD1929+012/2019-2-SCI-049.20200727/product/mbgphR202007270042_u2wm.fits"
-)
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Data\SALT\WD1929+012\2017-1-SCI-031.20170706\product\mbgphH201707060019_uwm.fits"
+    )
 plt.figure(facecolor="white")
 plt.plot(wav, flux, color="black", linewidth=0.5)
 plt.title(f"{i[0]}")
@@ -419,8 +402,8 @@ plt.show
 
 
 hdulist = fits.open(
-    "/data/wdplanetary/omri/Data/WD1929+012/2019-2-SCI-049.20210420-2/product/mbgphR202104200024_uwm.fits"
-)
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Data\SALT\WD1929+012\2017-1-SCI-031.20170706\product\mbgphH201707060019_uwm.fits"
+    )
 header = hdulist[0].header
 
 
@@ -438,10 +421,6 @@ hdulist.close()
 
 # Print the UTC representation of the time
 # print(f"Observation Date and Time (UTC): {time.utc.iso}")
-
-
-# In[ ]:
-
 
 # function to process the inputted wavelength and flux data,
 # making binary masks, moving averagses, normalising the continuum
@@ -464,8 +443,6 @@ def process_data_gaussian(wav, flux):
 
     return xwav, padded_flux, n_moving_avg
 
-
-# In[ ]:
 
 
 # function to process the inputted wavelength and flux data,
@@ -533,8 +510,6 @@ def process_data_cc(wav, flux):
     return wav, flux  # ,xwav,padded_flux,n_moving_avg n_mask
 
 
-# In[ ]:
-
 
 def process_data_model(wav, flux, c_lines):
     u_loc = np.searchsorted(wav, (5200))
@@ -589,9 +564,6 @@ def process_data_model(wav, flux, c_lines):
 # plt.show()
 
 
-# In[ ]:
-
-
 def process_data_mike_gaussian(wav, flux, c_lines):
     # make a new wavelength filter that is accurate to 3dp
     min = wav[np.argmin(wav)]
@@ -610,10 +582,6 @@ def process_data_mike_gaussian(wav, flux, c_lines):
     window_size = 3000
     n_moving_avg = uniform_filter1d(padded_flux, size=window_size)
     return xwav, padded_flux, n_moving_avg
-
-
-# In[ ]:
-
 
 # calculate errors - faster
 
@@ -759,9 +727,9 @@ def mike_pick_files_by_patterns(folder_path, start_patterns, end_patterns):
 # This is where we pick the folder path and the name of the file that we want
 # Need to adjust this so that it is more clear
 star = "WD1929+012"
-SALT_folder_path = "/data/wdplanetary/omri/Data/WD1929+012/"
-MIKE_blue_folder_path = "/data/wdplanetary/laura/MIKE/Data/WD1929+011/blue/"
-MIKE_red_folder_path = "/data/wdplanetary/laura/MIKE/Data/WD1929+011/red/"
+SALT_folder_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\SALT\WD1929+012"
+MIKE_blue_folder_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\\MIKE\WD1929+011\\blue"
+MIKE_red_folder_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\\MIKE\WD1929+011\\red"
 
 
 blue_start = "mbgphH"
@@ -2169,23 +2137,13 @@ fig = corner.corner(
     flat_samples, labels=labels, truths=[rv, w1, d1, w2, d2, sigma], dpi=200
 )
 
-
-# In[ ]:
-
-
-stop
-
-
-# In[ ]:
-
-
 # real data
 
 
 # importing, cropping, and normalising data
 wav, flux, t, star = Get_Wavelength_Flux_File(
-    "/data/wdplanetary/omri/Data/WD1929+012/2017-1-SCI-031.20170714/product/mbgphH201707140017_u2wm.fits"
-)
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Data\SALT\WD1929+012\2017-1-SCI-031.20170706\product\mbgphH201707060019_uwm.fits"
+    )
 # rwav,rflux,t,star = Get_Wavelength_Flux_File("/data/wdplanetary/omri/Data/WD1929+012/2017-1-SCI-031.20170711/product/mbgphR201707110020_u2wm.fits")
 # wav = np.concatenate((bwav,rwav))
 # flux = np.concatenate((bflux,rflux))
@@ -2516,8 +2474,8 @@ data.to_csv(file_name_without_spaces, sep="\t", index=False)
 # CrossCorrRV run file for the self-correlation
 window_size = 100.0
 wav_reference, flux_reference, ref_time, ref_object = Get_Wavelength_Flux_File(
-    "/data/wdplanetary/omri/Data/WD1929+012/2017-1-SCI-031.20170730/product/mbgphH201707300036_u2wm.fits"
-)
+    r"Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\SALT\WD1929+012\\2017-1-SCI-031.20170706\\product\\._mbgphR201707060020_uwm.fits"
+    )
 
 # could also use this as the best: /data/wdplanetary/omri/Data/WD1929+012/2017-1-SCI-031.20170730/product/mbgphH201707300036_u2wm.fits
 btime_strings = [(ref_time)]
@@ -2543,9 +2501,6 @@ for i in b_files:
     else:
         print("This is a file for" + str(obs_object))
         continue
-
-
-# In[ ]:
 
 
 # code to manually check data at the end of each run
@@ -2836,8 +2791,6 @@ plt.gcf().autofmt_xdate()
 plt.savefig("/data/wdplanetary/omri/Output/DeltaRV_CrossCorr_model_4481_bothlines.pdf")
 plt.show()
 
-
-# In[ ]:
 
 
 # Runfile for the Cross-correlation code
