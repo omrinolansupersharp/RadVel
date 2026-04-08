@@ -806,7 +806,7 @@ def Mike_Gaussian(
                                 "Order": j,
                             }
                         )  # [t],[snr], [depth], [rv], [err]])
-                        dir_name = f"/data/wdplanetary/omri/Output/resultfiles/G29-38/MIKE_Voigt_fitting/all_lines/{t}/"
+                        dir_name = fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/G29-38/MIKE_Voigt_fitting/all_lines/{t}/"
                         dir_name_without_spaces = dir_name.replace(" ", "")
                         os.makedirs(dir_name_without_spaces, exist_ok=True)
                         file_end = f"order{j}_{str(line)}.txt"
@@ -858,7 +858,7 @@ rverrs = []
 n = 0
 star = ""
 
-mike_blue_plot_dir = "/data/wdplanetary/omri/Output/G29-38/MIKE/Voigtfits"
+mike_blue_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/G29-38/MIKE/Voigtfits"
 # fig, ax = plt.subplots(figsize=(6, 20))
 
 
@@ -971,7 +971,7 @@ averages = np.array(
 print(averages)  #
 
 np.savetxt(
-    "/data/wdplanetary/omri/Output/resultfiles/G29-38/MIKE_Voigt_Results/ca3933.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/G29-38/MIKE_Voigt_Results/ca3933.txt",
     averages,
 )
 
@@ -980,7 +980,7 @@ np.savetxt(
 
 
 file_name = (
-    "/data/wdplanetary/omri/Output/resultfiles/G29-38/MIKE_Voigt_Results/ca3933.txt"
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/G29-38/MIKE_Voigt_Results/ca3933.txt"
 )
 times = []
 delta_rvs = []
@@ -1069,9 +1069,9 @@ for i, freq in enumerate(significant_peaks):
     print(f"Frequency: {freq}, False Alarm Rate: {false_alarm_rates[i]}")
 
 os.makedirs(
-    "/data/wdplanetary/omri/Output/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True
 )
-# plt.savefig("/data/wdplanetary/omri/Output/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
+# plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
 plt.show()
 
 

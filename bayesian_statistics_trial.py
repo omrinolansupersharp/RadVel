@@ -1588,7 +1588,7 @@ averages = np.array(
 print(averages)  #
 
 np.savetxt(
-    "/data/wdplanetary/omri/Output/resultfiles/bayesian/first_try_two_lines.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/bayesian/first_try_two_lines.txt",
     averages,
 )
 

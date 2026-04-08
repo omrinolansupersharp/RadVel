@@ -17,7 +17,7 @@ from scipy.optimize import curve_fit, fsolve
 
 
 """ 
-df = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/SALT_Voigt/reruns/si5040.txt", delimiter='\t', encoding='utf-8')
+df = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/SALT_Voigt/reruns/si5040.txt", delimiter='\t', encoding='utf-8')
 df['TIMES'] = pd.to_datetime(df['TIMES'])
 times = df["TIMES"]
 t_years = np.array([float(t.total_seconds() / (24 * 3600*365)) for t in times])
@@ -33,7 +33,7 @@ min_gap = np.min(differences_years)
 print("Minimum time gap between consecutive timestamps (in years):", min_gap)
  """
 data = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/voigt_fitting_mg4481.txt", delimiter=","
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/voigt_fitting_mg4481.txt", delimiter=","
 )
 times = data[:, 0]
 times = np.array(times)
@@ -47,7 +47,7 @@ min_gap = 15 / (60 * 24 * 365)
 print(f"SALT min cadence is{min_gap}")
 
 mdata = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/mike_voigt_fitting_ca_mg.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/mike_voigt_fitting_ca_mg.txt",
     delimiter=",",
 )
 # print(mdata)
@@ -265,7 +265,7 @@ plt.xscale("log")
 plt.axvline(1 / 365.25, linestyle="dashed", color="white", linewidth=2)
 # plt.yscale(‘log’)
 plt.savefig(
-    "/data/wdplanetary/omri/Output/resultfiles/param_space/Detection_probability_MIKE_Voigt.pdf",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/param_space/Detection_probability_MIKE_Voigt.pdf",
     bbox_inches="tight",
     dpi=400,
 )

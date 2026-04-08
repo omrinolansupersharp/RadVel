@@ -9,7 +9,7 @@
 #
 #
 # # Open the PNG file
-# img = Image.open("/data/wdplanetary/omri/Output/Gaussianline/blue/MgII_4481/MgII_4481_2020-07-30 00:00:00.png")
+# img = Image.open(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/Gaussianline/blue/MgII_4481/MgII_4481_2020-07-30 00:00:00.png")
 # display(img)
 
 
@@ -610,8 +610,6 @@ def calculate_error(data):
 # Also currently multiplying the raw error figure in the data by 5 to try and get a more representative result
 
 
-# In[ ]:
-
 
 def poly_fit(gwav, gdata):
     poly_model = PolynomialModel(degree=7)
@@ -652,9 +650,6 @@ def poly_fit(gwav, gdata):
 
     plt.show()
     return p_result
-
-
-# In[ ]:
 
 
 # function to pick the files that we want
@@ -773,21 +768,13 @@ merged_b_files = [
 ]
 
 
-# In[ ]:
-
 
 for i in mike_r_files:
     print(i)
 
 
-# In[ ]:
-
-
 for i in r_files:
     print(i)
-
-
-# In[ ]:
 
 
 # Splitting files up in to boxes
@@ -962,8 +949,8 @@ def Gaussian(wavelength, flux, moving_avg, errors, c_lines, time, n, plot_dir):
                 gdata, params, x=gwav, weights=gweights
             )  # ,sigma = wav_errors)
             # print(result.values['voigt_center'],result.params['voigt_center'])
-            print("The results of the fitting report are: ")
-            print(result.fit_report())
+            #print("The results of the fitting report are: ")
+            #print(result.fit_report())
             # find the individual polynomial best fit
             c0 = result.params["c0"].value
             c1 = result.params["c1"].value
@@ -1006,7 +993,7 @@ def Gaussian(wavelength, flux, moving_avg, errors, c_lines, time, n, plot_dir):
                     "Error": err,
                 }
             )  # [t],[snr], [depth], [rv], [err]])
-            dir_name = f"/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/red_lines/corrected_for_pixel/{t}/"
+            dir_name = fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/red_lines/corrected_for_pixel/{t}/"
             dir_name_without_spaces = dir_name.replace(" ", "")
             os.makedirs(dir_name_without_spaces, exist_ok=True)
             file_end = f"{str(line)}.txt"
@@ -1083,9 +1070,6 @@ def Gaussian(wavelength, flux, moving_avg, errors, c_lines, time, n, plot_dir):
         print("The rv mean and error is", mean, mean_error)
 
     return mean, mean_error, n
-
-
-# In[ ]:
 
 
 def Mike_Gaussian(
@@ -1292,8 +1276,8 @@ def Mike_Gaussian(
                         result.params["voigt_center"],
                         result.params["voigt_amplitude"],
                     )
-                    print("The results of the fitting report are: ")
-                    print(result.fit_report())
+                    #print("The results of the fitting report are: ")
+                    #print(result.fit_report())
 
                     t = time.datetime
                     # plt.show()
@@ -1400,7 +1384,7 @@ def Mike_Gaussian(
                                 "Order": j,
                             }
                         )  # [t],[snr], [depth], [rv], [err]])
-                        dir_name = f"/data/wdplanetary/omri/Output/resultfiles/WD1929/MIKE_Voigt_fitting/all_lines/{t}/"
+                        dir_name = fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/MIKE_Voigt_fitting/all_lines/{t}/"
                         dir_name_without_spaces = dir_name.replace(" ", "")
                         os.makedirs(dir_name_without_spaces, exist_ok=True)
                         file_end = f"order{j}_{str(line)}.txt"
@@ -1448,12 +1432,8 @@ def Mike_Gaussian(
     return mean, mean_error, n
 
 
-# In[ ]:
-
 
 # Here we apply the cross coreelation of the entire spectrum as created by Lalitha
-
-# In[ ]:
 
 
 def cross_correlation(reference_flux, observed_flux, wavelength_observed, time):
@@ -1522,7 +1502,7 @@ def cross_correlation(reference_flux, observed_flux, wavelength_observed, time):
             "Error": sigma.value,
         }
     )  # [t],[snr], [depth], [rv], [err]])
-    dir_name = f"/data/wdplanetary/omri/Output/resultfiles/WD1929/Old_method_Reference_CCF/wholespectrum/"
+    dir_name = fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Old_method_Reference_CCF/wholespectrum/"
     dir_name_without_spaces = dir_name.replace(" ", "")
     os.makedirs(dir_name_without_spaces, exist_ok=True)
     file_end = f"{t}.txt"
@@ -1531,7 +1511,7 @@ def cross_correlation(reference_flux, observed_flux, wavelength_observed, time):
     # np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
     data.to_csv(file_name_without_spaces, sep="\t", index=False)
     # how to read the data back in
-    # data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
+    # data = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
 
     return max_rv, sigma.value
 
@@ -1555,9 +1535,6 @@ def cross_correlation(reference_flux, observed_flux, wavelength_observed, time):
     error = 1
     #print('Velocity Shift:', velocity_shift, 'km/s')
     return velocity_shift, error """
-
-
-# In[ ]:
 
 
 def RVCC(
@@ -1678,27 +1655,11 @@ def RVCC(
     plt.close()
     print(max_rv)
     print(f"Optimized mu: {max_rv:.2f} km/s")
-    """ 
-    #save the datafiles instead of stacking the plot here
-    data = pd.DataFrame({"template wavelength": tw, "template flux": tf, "Shifted observed wavelength": rv_dw, "observed flux": df, "RV":(rv),"CC": (n_cc), "Bimodal fit": (result.best_fit), "Time": t, "RV": max_rv, "Error": sigma.value}) #[t],[snr], [depth], [rv], [err]])
-    dir_name = f"/data/wdplanetary/omri/Output/resultfiles/WD1929/Reference_CCF/bluespectrum/"
-    dir_name_without_spaces = dir_name.replace(" ", "")
-    os.makedirs(dir_name_without_spaces, exist_ok=True)
-    file_end = f"{t}.txt"
-    file_name = os.path.join(dir_name_without_spaces, file_end)
-    file_name_without_spaces = file_name.replace(" ", "")
-    #np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
-    data.to_csv(file_name_without_spaces, sep='\t', index=False)
-    #how to read the data back in 
-    #data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
-    """
+
     return max_rv, sigma
 
     # print(rv[np.argmax(cc)])
     # return rv, cc
-
-
-# In[ ]:
 
 
 def RVCC_model(
@@ -1835,26 +1796,11 @@ def RVCC_model(
     print(f"Optimized mu: {max_rv:.2f} km/s")
 
     # save the datafiles instead of stacking the plot here
-    """ data = pd.DataFrame({"template wavelength": tw, "template flux": tf, "Shifted observed wavelength": rv_dw, "observed flux": df, "RV":(rv),"CC": (n_cc), "Bimodal fit": (result.best_fit), "Time": t, "RV": max_rv, "Error": sigma.value}) #[t],[snr], [depth], [rv], [err]])
-    dir_name = f"/data/wdplanetary/omri/Output/resultfiles/WD1929/Model_CCF/bluespectrum/"
-    dir_name_without_spaces = dir_name.replace(" ", "")
-    os.makedirs(dir_name_without_spaces, exist_ok=True)
-    file_end = f"{t}.txt"
-    file_name = os.path.join(dir_name_without_spaces, file_end)
-    file_name_without_spaces = file_name.replace(" ", "")
-    #np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
-    data.to_csv(file_name_without_spaces, sep='\t', index=False)
-    #how to read the data back in 
-    #data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
-    """
+    
     return max_rv, sigma, init
 
     # print(rv[np.argmax(cc)])
     # return rv, cc
-
-
-# In[ ]:
-
 
 def RVCC_MIKE(tw, tf, dw, df, line, obs_time):
     window_size = 100
@@ -1978,7 +1924,7 @@ def RVCC_MIKE(tw, tf, dw, df, line, obs_time):
         }
     )  # [t],[snr], [depth], [rv], [err]])
     dir_name = (
-        f"/data/wdplanetary/omri/Output/resultfiles/WD1929/Reference_CCF/wholespectrum/"
+        fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Reference_CCF/wholespectrum/"
     )
     dir_name_without_spaces = dir_name.replace(" ", "")
     os.makedirs(dir_name_without_spaces, exist_ok=True)
@@ -1988,7 +1934,7 @@ def RVCC_MIKE(tw, tf, dw, df, line, obs_time):
     # np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
     data.to_csv(file_name_without_spaces, sep="\t", index=False)
     # how to read the data back in
-    # data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
+    # data = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
 
     return max_rv, sigma
 
@@ -2451,7 +2397,7 @@ data = pd.DataFrame(
     }
 )  # [t],[snr], [depth], [rv], [err]])
 dir_name = (
-    f"/data/wdplanetary/omri/Output/resultfiles/WD1929/MCMC_Bayesian/bluespectrum/"
+    fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/MCMC_Bayesian/bluespectrum/"
 )
 dir_name_without_spaces = dir_name.replace(" ", "")
 os.makedirs(dir_name_without_spaces, exist_ok=True)
@@ -2461,14 +2407,12 @@ file_name_without_spaces = file_name.replace(" ", "")
 # np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
 data.to_csv(file_name_without_spaces, sep="\t", index=False)
 # how to read the data back in
-# data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
+# data = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
 
 
 # fig = corner.corner(
 #     flat_samples, labels=labels, truths=[m_true, b_true, np.log(f_true)]
 # );
-
-# In[ ]:
 
 
 # CrossCorrRV run file for the self-correlation
@@ -2521,11 +2465,9 @@ print(times_list)
 averages = np.array([tdays, bvels, brverrs])
 print(averages)
 np.savetxt(
-    "/data/wdplanetary/omri/Output/resultfiles/SelfCCF/blue_spec_salt.txt", averages
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/SelfCCF/blue_spec_salt.txt", averages
 )
 
-
-# In[ ]:
 
 
 # plotting for the cross_correlation
@@ -2558,7 +2500,7 @@ averages = np.array(
 # averages = averages[np.isnan(averages[:,1])]
 
 # print(averages)
-file_name = "/data/wdplanetary/omri/Output/resultfiles/crosscorrRV_bluespec_results.txt"
+file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_bluespec_results.txt"
 np.savetxt(file_name, averages, delimiter=",", fmt="%f")
 
 
@@ -2566,7 +2508,7 @@ np.savetxt(file_name, averages, delimiter=",", fmt="%f")
 
 
 # Radial Velocity variations with time plot
-file_name = "/data/wdplanetary/omri/Output/resultfiles/crosscorrRV_bluespec_results.txt"
+file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_bluespec_results.txt"
 averages = np.loadtxt(file_name, delimiter=",")
 t = averages[:, 0]
 v = averages[:, 1]
@@ -2595,7 +2537,7 @@ plt.gcf().autofmt_xdate()
 # plt.tight_layout()
 # plt.ylim(-20,20)
 # plt.xlim(0,112)
-# plt.savefig("/data/wdplanetary/omri/Output/DeltaRV_CrossCorr_bluespec.pdf")
+# plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_CrossCorr_bluespec.pdf")
 plt.show()
 
 
@@ -2610,12 +2552,6 @@ plt.ylabel("Power")
 plt.xlabel("Frequency")
 plt.figure(facecolor="white")
 plt.show()
-
-
-# In[ ]:
-
-
-# In[ ]:
 
 
 # Runfile for the cross-correlation with the model spectrum
@@ -2680,8 +2616,6 @@ for i in b_files:
         continue
 
 
-# In[ ]:
-
 
 # code to manually check data at the end of each run
 print(np.mean(bvels), np.std(bvels))
@@ -2704,12 +2638,10 @@ print(time_strings)
 averages = np.array([time_strings, bvels, bvels_from_argmax, brverrs])
 print(averages)
 np.savetxt(
-    "/data/wdplanetary/omri/Output/resultfiles/ModelCCF/blue_spec_abs_lines_t_datetime.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/ModelCCF/blue_spec_abs_lines_t_datetime.txt",
     averages,
 )
 
-
-# In[ ]:
 
 
 # plotting for the model_ cross_correlation
@@ -2742,11 +2674,9 @@ averages = np.array(
 # averages = averages[np.isnan(averages[:,1])]
 
 # print(averages)
-file_name = "/data/wdplanetary/omri/Output/resultfiles/crosscorrRV_model_mg4481_bothlines_results.txt"
+file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_model_mg4481_bothlines_results.txt"
 np.savetxt(file_name, averages, delimiter=",", fmt="%f")
 
-
-# In[ ]:
 
 
 # Radial Velocity variations with time plot
@@ -2788,7 +2718,7 @@ plt.gcf().autofmt_xdate()
 # plt.tight_layout()
 # plt.ylim(-20,20)
 # plt.xlim(0,112)
-plt.savefig("/data/wdplanetary/omri/Output/DeltaRV_CrossCorr_model_4481_bothlines.pdf")
+plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_CrossCorr_model_4481_bothlines.pdf")
 plt.show()
 
 
@@ -2961,8 +2891,6 @@ print(np.std(bvels))
 #
 #
 
-# In[ ]:
-
 
 # Plots for Cross Correlation
 # Combining data points that are the same times
@@ -2981,7 +2909,7 @@ averages = np.array(
     ]
 )
 # print(averages)
-file_name = "/data/wdplanetary/omri/Output/resultfiles/cross_correlation.txt"
+file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/cross_correlation.txt"
 np.savetxt(file_name, averages, delimiter=",", fmt="%f")
 
 # d = pd.DataFrame(data=[tarray, rvarray, rverrsarray], columns=["Time", "RV", "Errors"])
@@ -3009,11 +2937,9 @@ plt.gcf().autofmt_xdate()
 # plt.tight_layout()
 # plt.ylim(30,50)
 # plt.xlim(0,112)
-plt.savefig("/data/wdplanetary/omri/Output/DeltaRVGaussian.pdf")
+plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRVGaussian.pdf")
 plt.show()
 
-
-# In[ ]:
 
 
 # CCF self-correlation for MIKE
@@ -3022,8 +2948,8 @@ time_strings = []
 rverrs = []
 
 n = 0
-mike_blue_plot_dir = "/data/wdplanetary/omri/Output/mike/referenceCCF/"
-stacked_plot_dir = "/data/wdplanetary/omri/Output/stackedplots/"
+mike_blue_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/mike/referenceCCF/"
+stacked_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/stackedplots/"
 
 ref_order, ref_wav, ref_flux, ref_snr, refOBJECT, ref_time = read_mike_spec(
     "/data/wdplanetary/laura/MIKE/Data/WD1929+011/blue/galex1931_blue_2010-06-17.fits"
@@ -3070,21 +2996,18 @@ for j in mike_b_files:
         continue
 
 
-# In[ ]:
-
-
 # Voigt fitting runfile for MIKE
 rvs = []
 time_strings = []
 rverrs = []
 
 n = 0
-mike_blue_plot_dir = "/data/wdplanetary/omri/Output/mike/Gaussianline/blue/"
-stacked_plot_dir = "/data/wdplanetary/omri/Output/stackedplots/"
+mike_blue_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/mike/Gaussianline/blue/"
+stacked_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/stackedplots/"
 
 star = "G"
 
-stacked_plot_dir = "/data/wdplanetary/omri/Output/stackedplots/"
+stacked_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/stackedplots/"
 # fig, ax = plt.subplots(figsize=(6, 20))
 
 for files_list in (mike_r_files, mike_b_files):
@@ -3147,32 +3070,12 @@ for files_list in (mike_r_files, mike_b_files):
             print("This is a file for " + str(OBJECT) + " instead of " + str(star))
             continue
 
-""" 
-#Now show the stacked plot
-ax.set_xlabel('Wavelength - Å')
-ax.set_ylabel('Normalised Flux')
-#ax.set_xlim(4476.13,4486.13)
-ax.set_xlim(4851,4871)
- 
-ax.axvline(x=6371.360, color='black', linestyle='--', label='Laboratory line centre')
-ax.axvline(x=(6371.360 * (1+ np.mean(rvs)/299792)), color='red', linestyle='--', label='Mean shifted line centre')
-ax.axvspan(-np.std(rvs),np.std(rvs), color='gray',label = "1 sigma", alpha=0.4) 
-#ax.set_title('Stacked Mg II Spectral Lines from ' + str(OBJECT))
-plt.tight_layout()
-plt.savefig("/data/wdplanetary/omri/Output/stackedplots/mike_lines.pdf")
-plt.show()
-"""
 
 print(np.nanmean(rvs))
 
 
-# In[ ]:
-
 
 # Now need to plot and all for MIKE
-
-
-# In[ ]:
 
 
 # Gaussian fits runfile for both channels
@@ -3186,11 +3089,11 @@ rv_corrs_errs = []
 star = "WD1929"
 
 n = 0
-blue_plot_dir = "/data/wdplanetary/omri/Output/Gaussianline/blue/"
-red_plot_dir = "/data/wdplanetary/omri/Output/Gaussianline/red/"
-sky_plot_dir = "/data/wdplanetary/omri/Output/Gaussianline/sky/"
+blue_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/Gaussianline/blue/"
+red_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/Gaussianline/red/"
+sky_plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/Gaussianline/sky/"
 
-# stacked_plot_dir =  "/data/wdplanetary/omri/Output/stackedplots/"
+# stacked_plot_dir =  r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/stackedplots/"
 # fig, ax = plt.subplots(figsize=(6, 20))
 
 for j, k, s in zip(b_files, r_files, sky_r_files):
@@ -3257,25 +3160,6 @@ for j, k, s in zip(b_files, r_files, sky_r_files):
 print(np.mean(rvs))
 # print(np.mean(rv_corrs))
 # rverrs = rverrs + (np.std(rv_corrs))
-""" 
-#Now show the stacked plot
-ax.set_xlabel('Wavelength - Å')
-ax.set_ylabel('Normalised Flux')
-#ax.set_xlim(4476.13,4486.13)
-ax.set_xlim(4851,4871)
- 
-ax.axvline(x=6371.360, color='black', linestyle='--', label='Laboratory line centre')
-ax.axvline(x=(6371.360 * (1+ np.mean(rvs)/299792)), color='red', linestyle='--', label='Mean shifted line centre')
-ax.axvspan(-np.std(rvs),np.std(rvs), color='gray',label = "1 sigma", alpha=0.4) 
-#ax.set_title('Stacked Mg II Spectral Lines from ' + str(OBJECT))
-plt.tight_layout()
-plt.savefig("/data/wdplanetary/omri/Output/stackedplots/H_4860.pdf")
-plt.show()
- """
-
-
-# In[ ]:
-
 
 # Combined Voigt fits for SALT data with a restricted rv shift
 
@@ -3289,7 +3173,7 @@ rv_corrs_errs = []
 n = 0
 
 
-# stacked_plot_dir =  "/data/wdplanetary/omri/Output/stackedplots/"
+# stacked_plot_dir =  r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/stackedplots/"
 # fig, ax = plt.subplots(figsize=(6, 20))
 
 for j, k in zip(b_files, r_files):
@@ -3328,9 +3212,6 @@ for j, k in zip(b_files, r_files):
     else:
         print("This is a file for " + str(bOBJECT) + " instead of " + str(star))
         continue
-
-
-# In[ ]:
 
 
 # Combining data points that are the same times
@@ -3376,13 +3257,9 @@ averages = np.array(
 print(averages)  #
 
 np.savetxt(
-    "/data/wdplanetary/omri/Output/resultfiles/SALT_Voigt/all_lines_pixel_corrected.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/SALT_Voigt/all_lines_pixel_corrected.txt",
     averages,
 )
-
-
-# In[ ]:
-
 
 print(rvs)
 
@@ -3395,7 +3272,7 @@ print(rvs)
 # #num_files = len(b_files)
 #
 # n = -1
-# plot_dir = "/data/wdplanetary/omri/Output/Gaussianline/red/"
+# plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/Gaussianline/red/"
 # for j in r_files:
 #     n=n+1
 #     wav, flux ,time = Get_Wavelength_Flux_File(j)
@@ -3412,16 +3289,14 @@ print(rvs)
 #
 #
 
-# In[ ]:
-
 
 from PIL import Image
 
-output_dir = "/data/wdplanetary/omri/Output/bigspectraplots/"
+output_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/bigspectraplots/"
 os.makedirs(output_dir, exist_ok=True)
 
 for line in b_lines:
-    plot_dir = "/data/wdplanetary/omri/Output/Gaussianline/red/"
+    plot_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/Gaussianline/red/"
     sub_dir = f"{line[0]}/"
     sub_dir_path = os.path.join(plot_dir, sub_dir)
 
@@ -3487,10 +3362,7 @@ for file in png_files:
 from pdf2image import convert_from_path
 
 
-# In[ ]:
-
-
-file_path = "/data/wdplanetary/omri/Output/bigspectraplots/H_4860_2_combined_fits.pdf"
+file_path = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/bigspectraplots/H_4860_2_combined_fits.pdf"
 image_file = "H_4860_2_combined_fits.png"
 
 # Convert the PDF file to an image
@@ -3531,18 +3403,15 @@ image.close()  # Remove the temporary PNG file
 #         )
 #     p.save(filename=f'/data/wdplanetary/omri/Output/Gaussianfits_mgII_4481_epoch_{i}.png', dpi=300)
 
-# In[ ]:
-
-
 # stacked plot creation
-# data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
+# data = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
 # data = pd.DataFrame({"Wavelength":(gwav),"Normalized Data": (gdata/p_result), "Voigt fit": (result.best_fit/p_result), "Time": t, "SNR": snr, "Depth": depth, "RV": rv, "Error": err}) #[t],[snr], [depth], [rv], [err]])
 
 line = 6562.79
 
-salt_root_dir = "/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/red_lines/corrected_for_pixel/"  # Replace this with the path to your root directory
+salt_root_dir = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/red_lines/corrected_for_pixel/"  # Replace this with the path to your root directory
 mike_root_dir = (
-    "/data/wdplanetary/omri/Output/resultfiles/WD1929/MIKE_Voigt_fitting/all_lines/"
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/MIKE_Voigt_fitting/all_lines/"
 )
 # Initialize an empty list to store file paths
 plot_files = []
@@ -3612,9 +3481,6 @@ for file in sorted_files:
 plt.show()
 
 
-# In[ ]:
-
-
 # #data = pd.DataFrame({'Time':times,'RV':rvs, "RV errors":rverrs})
 # #d = data.groupby('Time').mean().reset_index()
 # #f = d[(d['RV'] >= 30) & (d['RV'] <= 50)]
@@ -3625,8 +3491,6 @@ plt.show()
 # #print(d['Time'])
 
 #
-
-# In[ ]:
 
 
 # Radial Velocity variations with time saving the data
@@ -3648,8 +3512,8 @@ power = LombScargle(t, v, errs).power(frequencies)
 max_length = max(len(t), len(v), len(errs), len(frequencies), len(power))
 
 # Open a file for writing
-os.makedirs("/data/wdplanetary/omri/Output/resultfiles/MIKE_Voigt/", exist_ok=True)
-file_name = "/data/wdplanetary/omri/Output/resultfiles/MIKE_Voigt/all_abs_lines_snr_filter_13_depth_3.txt"
+os.makedirs(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/MIKE_Voigt/", exist_ok=True)
+file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/MIKE_Voigt/all_abs_lines_snr_filter_13_depth_3.txt"
 with open(file_name, "w") as txtfile:
     # Write header row
     txtfile.write("Time\tDeltaRV\tErrors\tfrequencies\tpower\n")
@@ -3671,11 +3535,8 @@ with open(file_name, "w") as txtfile:
 # data.to_csv(file_name, sep='\t', index=False)
 
 
-# In[ ]:
-
-
 # rv variations with time plotting
-file_name = "/data/wdplanetary/omri/Output/resultfiles/voigt_fitting.txt"
+file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/voigt_fitting.txt"
 times = []
 delta_rvs = []
 errors = []
@@ -3809,18 +3670,15 @@ for i, freq in enumerate(significant_peaks):
     print(f"Frequency: {freq}, False Alarm Rate: {false_alarm_rates[i]}")
 
 os.makedirs(
-    "/data/wdplanetary/omri/Output/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True
 )
-# plt.savefig("/data/wdplanetary/omri/Output/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
+# plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
 plt.show()
-
-
-# In[78]:
 
 
 # data from voigt fitting
 mg4481 = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/SALT_Voigt/reruns/mg4481_for_table.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/SALT_Voigt/reruns/mg4481_for_table.txt",
     delimiter="\t",
     skiprows=1,
     usecols=[1],
@@ -3832,21 +3690,21 @@ abs_lines = np.loadtxt(
     usecols=[1],
 )
 all_lines = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/SALT_Voigt/reruns/all_lines_for_table.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/SALT_Voigt/reruns/all_lines_for_table.txt",
     delimiter="\t",
     skiprows=1,
     usecols=[1],
 )
 selfccf = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/crosscorrRV_bluespec_results.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_bluespec_results.txt",
     delimiter=",",
 )
 modelccf = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/ModelCCF/blue_spec_abs_lines.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/ModelCCF/blue_spec_abs_lines.txt",
     delimiter=" ",
 )
 bayesian = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/bayesian/first_try_two_lines.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/bayesian/first_try_two_lines.txt",
     delimiter=" ",
 )
 
@@ -3863,8 +3721,6 @@ voigt_data = np.array(
 )
 # print(voigt_data)
 
-
-# In[83]:
 
 
 def adjacent_values(vals, q1, q3):
@@ -3931,22 +3787,19 @@ labels = [
 set_axis_style(ax, labels)
 
 # plt.subplots_adjust(bottom=0.15, wspace=0.05)
-# plt.savefig("/data/wdplanetary/omri/Output/violinplots/voigt_comparisons.pdf")
+# plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/violinplots/voigt_comparisons.pdf")
 plt.show()
 
 
-# In[ ]:
-
-
 mg4481 = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/voigt_fitting_mg4481.txt", delimiter=","
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/voigt_fitting_mg4481.txt", delimiter=","
 )
 crosscorr_bluespec = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/crosscorrRV_bluespec_results.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_bluespec_results.txt",
     delimiter=",",
 )
 crosscorr_model = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/crosscorrRV_model_mg4481_results.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_model_mg4481_results.txt",
     delimiter=",",
 )
 data = np.array(
@@ -4014,12 +3867,10 @@ labels = [
 ]
 set_axis_style(ax, labels)
 
-plt.savefig("/data/wdplanetary/omri/Output/violinplots/voigt_vs_crosscorr.pdf")
+plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/violinplots/voigt_vs_crosscorr.pdf")
 # plt.subplots_adjust(bottom=0.15, wspace=0.05)
 plt.show()
 
-
-# In[ ]:
 
 
 mg4481 = pd.read_csv(file_path, delimiter="\t", encoding="utf-8")
@@ -4089,13 +3940,9 @@ labels = [
 ]
 set_axis_style(ax, labels)
 
-plt.savefig("/data/wdplanetary/omri/Output/violinplots/voigt_vs_crosscorr.pdf")
+plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/violinplots/voigt_vs_crosscorr.pdf")
 # plt.subplots_adjust(bottom=0.15, wspace=0.05)
 plt.show()
-
-
-# In[ ]:
-
 
 # Violin plot for each line:
 y = filtered_rvarray - np.mean(filtered_rvarray)
@@ -4115,13 +3962,10 @@ plt.show()
 # #plt.ylim(30,50)
 # plt.show()
 
-# In[ ]:
-
-
 # Now attempt to make a periodogram of these results
 
 data = np.loadtxt(
-    "/data/wdplanetary/omri/Output/resultfiles/mike_voigt_fitting_ca_mg.txt",
+    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/mike_voigt_fitting_ca_mg.txt",
     delimiter=",",
 )
 v = data[:, 1] - np.mean(data[:, 1])

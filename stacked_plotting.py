@@ -73,7 +73,7 @@ p_lines.append(("H_6563",6562.79 ,True)) #not present in the 2020 spectra?
 
 
 # #stacked plot creation
-# #data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
+# #data = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/only_mg_line/snr_cutoff_16.05612842459828/2021-04-21T03:09:52.703/4481.185.txt", sep='\t')
 # #data = pd.DataFrame({"Wavelength":(gwav),"Normalized Data": (gdata/p_result), "Voigt fit": (result.best_fit/p_result), "Time": t, "SNR": snr, "Depth": depth, "RV": rv, "Error": err}) #[t],[snr], [depth], [rv], [err]])
 # 
 # for i in p_lines:
@@ -104,7 +104,7 @@ p_lines.append(("H_6563",6562.79 ,True)) #not present in the 2020 spectra?
 # 
 #         data = pd.read_csv((file), sep='\t')
 #     #fig,ax = plt.subplots(figsize=(6, 4),dpi = 100)
-#     #data = pd.read_csv("/data/wdplanetary/omri/Output/resultfiles/WD1929/Voigt_fitting/red_lines/corrected_for_pixel/2017-07-1123:29:21.148000/5978.93.txt", sep='\t')
+#     #data = pd.read_csv(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/Voigt_fitting/red_lines/corrected_for_pixel/2017-07-1123:29:21.148000/5978.93.txt", sep='\t')
 #         time = data['Time'].values[0]
 #         wavelength = data['Wavelength'].values
 #         normalized_data = data['Normalized Data'].values
@@ -315,8 +315,8 @@ print("Significant Peaks:")
 for i, freq in enumerate(significant_peaks):
     print(f"Frequency: {freq}, False Alarm Rate: {false_alarm_rates[i]}")
  
-os.makedirs("/data/wdplanetary/omri/Output/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True)
-#plt.savefig("/data/wdplanetary/omri/Output/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
+os.makedirs(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True)
+#plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
 plt.show()
 
 
