@@ -1,9 +1,18 @@
-salt_direct = False
-mike_direct = False
-salt_selfcc = False
-mike_selfcc = True
+salt_direct = False #ready
+mike_direct = False #ready
+salt_selfcc = False #ready
+mike_selfcc = False #ready
 salt_modelcc = False #ready
 mike_modelcc = False
+
+direct_abs_lines_plot = False
+direct_all_lines_plot = False
+direct_single_line_plot = False
+selfcc_plot = False
+modelcc_plot = False
+
+voigt_comparison = True
+salt_violin = True
 
 
 
@@ -437,7 +446,8 @@ def poly_fit(gwav, gdata):
     plt.plot(gwav, p_result, color="green", linewidth=1)
     plt.plot(gwav, gdata, color="blue", linewidth=0.5)
 
-    plt.show()
+    #plt.show()
+    plt.close()
     return p_result
 
 
@@ -599,6 +609,7 @@ def Gaussian(wavelength, flux, moving_avg, errors, c_lines, time, n, plot_dir):
 
             t = time.datetime
             # plt.show()
+            plt.close()
             print(result.values['voigt_center'])
             # print(result.fit_report())
             Line_Offset = result.values["voigt_center"] - line
@@ -720,8 +731,8 @@ def Mike_Gaussian(
     print("------------NEW--FILE----------", str(time))
     v_precision = 0.0  # kneeed to find the stability for MIKE
     w_size = 30
-    snr_cutoff = 13
-    line_depth_cutoff = 3
+    snr_cutoff = 10
+    line_depth_cutoff = 0
     # initialise result arrays
     RV = np.array([])
     RV_weight = np.array([])
@@ -737,7 +748,8 @@ def Mike_Gaussian(
             for j, wav_value in enumerate(wav_list):
                 plt.figure()
                 plt.plot(wav_value, flux_list[j])
-                plt.show()
+                #plt.show()
+                plt.close()
                 if float(np.min(wav_value)) <= float(i[1]) <= float(np.max(wav_value)):
                     print(f" For order {j} the line is in the order")
 
@@ -861,7 +873,7 @@ def Mike_Gaussian(
                     plt.plot(gwav, p_result, color="green", linewidth=1)
                     plt.plot(gwav, gdata, color="blue", linewidth=0.5)
 
-                    # plt.show()
+                    #plt.show()
                     plt.close()
 
                     n_flux = gdata / p_result
@@ -942,90 +954,88 @@ def Mike_Gaussian(
                     err_formatted = f"{err:.{2}g}"
 
                     # Plotting results
-                    if c_lines is not sky_lines:
+                    
 
-                        # Add a simple plot to the stacked plot
-                        """
-                        ax.plot(gwav, gdata/p_result  + n/3 , color='black', linewidth=0.5)
-                        ax.plot(gwav, result.best_fit/p_result  + n/3, color='red')
-                        ax.set_xlim(line-10,line+10)
-                        x_text = gwav[-1] + 0.2  # Add an offset for spacing
-                        ax.text(line+11, (1 + n/3), f"SNR:{snr:.3g}" , verticalalignment='center')
-                        n = n+1
-                        """
-                        print("stacked plot made")
+                    # Add a simple plot to the stacked plot
+                    """
+                    ax.plot(gwav, gdata/p_result  + n/3 , color='black', linewidth=0.5)
+                    ax.plot(gwav, result.best_fit/p_result  + n/3, color='red')
+                    ax.set_xlim(line-10,line+10)
+                    x_text = gwav[-1] + 0.2  # Add an offset for spacing
+                    ax.text(line+11, (1 + n/3), f"SNR:{snr:.3g}" , verticalalignment='center')
+                    n = n+1
+                    """
+                    print("stacked plot made")
 
-                        # We can add a label next to the line by using
+                    # We can add a label next to the line by using
 
-                        # Now save the line plot with the best fit and the shaded errors
-                        plt.figure(facecolor="white", figsize=(10, 8))
-                        # add spectrum
-                        plt.plot(gwav, n_flux, color="black", linewidth=0.5)
-                        # add best fit line
-                        plt.plot(gwav, result.best_fit, color="red")
-                        # shade standard deviation of data
-                        plt.fill_between(
-                            gwav,
-                            (result.best_fit - n_errors),
-                            (result.best_fit + n_errors),
-                            color="gray",
-                            alpha=0.3,
-                        )
+                    # Now save the line plot with the best fit and the shaded errors
+                    plt.figure(facecolor="white", figsize=(10, 8))
+                    # add spectrum
+                    plt.plot(gwav, n_flux, color="black", linewidth=0.5)
+                    # add best fit line
+                    plt.plot(gwav, result.best_fit, color="red")
+                    # shade standard deviation of data
+                    plt.fill_between(
+                        gwav,
+                        (result.best_fit - n_errors),
+                        (result.best_fit + n_errors),
+                        color="gray",
+                        alpha=0.3,
+                    )
 
-                        plt.title(
-                            f"{t.year}/{t.month}/{t.day}, Order: {j},  Line Centre:{result.values['voigt_center']}"
-                        )
-                        plt.text(
-                            0.95,
-                            0.10,
-                            f"SNR = {snr:.3g}",
-                            horizontalalignment="right",
-                            verticalalignment="top",
-                            transform=plt.gca().transAxes,
-                        )
-                        plt.text(
-                            0.95,
-                            0.05,
-                            f" RV = {rv:.{4}g} ± {err:.{2}g} km/s",
-                            horizontalalignment="right",
-                            verticalalignment="top",
-                            transform=plt.gca().transAxes,
-                        )
-                        plt.ylim(0.5, 1.3)
-                        plt.xlim(line - 6, line + 6)
-                        plt.xlabel("Wavelength (Å)")
-                        plt.ylabel("Normalized Flux")
-                        title = str(i[0]) + "_" + str(t) + ".pdf"
-                        title_without_spaces = title.replace(" ", "")
-                        plt.savefig(os.path.join(wd, title_without_spaces))
-                        plt.show()
-                        plt.close()
+                    plt.title(
+                        f"{t.year}/{t.month}/{t.day}, Order: {j},  Line Centre:{result.values['voigt_center']}"
+                    )
+                    plt.text(
+                        0.95,
+                        0.10,
+                        f"SNR = {snr:.3g}",
+                        horizontalalignment="right",
+                        verticalalignment="top",
+                        transform=plt.gca().transAxes,
+                    )
+                    plt.text(
+                        0.95,
+                        0.05,
+                        f" RV = {rv:.{4}g} ± {err:.{2}g} km/s",
+                        horizontalalignment="right",
+                        verticalalignment="top",
+                        transform=plt.gca().transAxes,
+                    )
+                    plt.ylim(0.5, 1.3)
+                    plt.xlim(line - 6, line + 6)
+                    plt.xlabel("Wavelength (Å)")
+                    plt.ylabel("Normalized Flux")
+                    title = str(i[0]) + "_" + str(t) + ".pdf"
+                    title_without_spaces = title.replace(" ", "")
+                    #plt.savefig(os.path.join(wd, title_without_spaces))
+                    #plt.show()
+                    plt.close()
 
-                        # save the datafiles instead of stacking the plot here
-                        data = pd.DataFrame(
-                            {
-                                "Wavelength": (gwav),
-                                "Normalized Data": (n_flux),
-                                "Voigt fit": (result.best_fit),
-                                "Time": t,
-                                "SNR": snr,
-                                "Depth": depth,
-                                "RV": rv,
-                                "Error": err,
-                                "Order": j,
-                            }
-                        )  # [t],[snr], [depth], [rv], [err]])
-                        dir_name = fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/WD1929/MIKE_Voigt_fitting/all_lines/{t}/"
-                        dir_name_without_spaces = dir_name.replace(" ", "")
-                        os.makedirs(dir_name_without_spaces, exist_ok=True)
-                        file_end = f"order{j}_{str(line)}.txt"
-                        file_name = os.path.join(dir_name_without_spaces, file_end)
-                        file_name_without_spaces = file_name.replace(" ", "")
-                        # np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
-                        data.to_csv(file_name_without_spaces, sep="\t", index=False)
+                    # save the datafiles instead of stacking the plot here
+                    data = pd.DataFrame(
+                        {
+                            "Wavelength": (gwav),
+                            "Normalized Data": (n_flux),
+                            "Voigt fit": (result.best_fit),
+                            "Time": t,
+                            "SNR": snr,
+                            "Depth": depth,
+                            "RV": rv,
+                            "Error": err,
+                            "Order": j,
+                        }
+                    )  # [t],[snr], [depth], [rv], [err]])
+                    dir_name = fr"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/MIKE_Voigt_fitting/all_lines/{t}/"
+                    dir_name_without_spaces = dir_name.replace(" ", "")
+                    os.makedirs(dir_name_without_spaces, exist_ok=True)
+                    file_end = f"order{j}_{str(line)}.txt"
+                    file_name = os.path.join(dir_name_without_spaces, file_end)
+                    file_name_without_spaces = file_name.replace(" ", "")
+                    # np.savetxt(file_name_without_spaces, data, delimiter=',', fmt = '%f') #"fmt=['%f', '%f', '%f', '%s', '%f', '%f', '%f', '%f'])
+                    data.to_csv(file_name_without_spaces, sep="\t", index=False)
 
-                    else:
-                        raise Exception("Line not in this order")
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -1234,8 +1244,8 @@ def RVCC_MIKE(tw, tf, dw, df, line, obs_time):
     )
     params["gaussian1_amplitude"].min = 0
     params["gaussian1_amplitude"].max = 1
-    params["gaussian1_center"].min = -1
-    params["gaussian1_center"].max = 1
+    params["gaussian1_center"].min = -5
+    params["gaussian1_center"].max = 5
     params["gaussian1_sigma"].min = 0
     params["gaussian1_sigma"].max = 5
 
@@ -1289,8 +1299,8 @@ def RVCC_MIKE(tw, tf, dw, df, line, obs_time):
     plt.xlabel("V (km/s)")
     plt.ylabel("CCF")
     plt.legend()
-    plt.show()
-    plt.close()
+    #plt.show()
+    #plt.close()
     print(max_rv)
     print(f"Optimized mu: {max_rv:.2f} km/s")
 
@@ -1522,7 +1532,7 @@ spec_lines = []
 
 # pollutant lines
 p_lines.append(("CaII_3933", 3933.663, False))  # only use for MIKE data
-p_lines.append(("CaII_4226", 4226.727, False))  # good
+p_lines.append(("CaII_4226", 4226.727, True))  # good
 p_lines.append(
     ("FeII_4923", 4923.927, False)
 )  # can't use, crosses over with interorder
@@ -1534,15 +1544,13 @@ p_lines.append(("SiII_5041", 5041.024, False))  # don't use this
 p_lines.append(("SiII_5055", 5055.984, False))  # This one is good use it
 p_lines.append(("SiII_5957", 5957.560, False))
 p_lines.append(("SiII_5978", 5978.930, False))
-p_lines.append(
-    ("SiII_6347", 6347.100, False)
-)  # these two are quite strong in WD1929+012
+p_lines.append(("SiII_6347", 6347.100, False))  # these two are quite strong in WD1929+012
 p_lines.append(("SiII_6371", 6371.360, False))  #
 p_lines.append(("MgI_5172", 5172.683, False))
 p_lines.append(("MgI_5183", 5183.602, False))
 p_lines.append(("MgII_4481", 4481.130, False))  # strong magnesium line
 p_lines.append(("MgII_4481_2", 4481.327, False))
-p_lines.append(("MgII_4481", 4481.180, True))  # weighted combination of mg_4481 lines
+p_lines.append(("MgII_4481", 4481.180, False))  # weighted combination of mg_4481 lines
 
 p_lines.append(("MgII_7877", 7877.054, False))
 p_lines.append(("MgII_7896", 7896.366, False))  # definitely not present
@@ -1570,7 +1578,7 @@ for i in spec_lines:
         r_lines.append(i)
 
 
-star = "WD1929+012"
+star = "WD1929"
 SALT_folder_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\SALT\WD1929+012"
 MIKE_blue_folder_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\\MIKE\WD1929+011\\blue"
 MIKE_red_folder_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\\MIKE\WD1929+011\\red"
@@ -1749,7 +1757,7 @@ if salt_direct:
     base = Path("C:/Users/OmriNolan/OneDrive - SUPER-SHARP Space Systems Limited/Documents")
     save_dir = base / "Paper_project" / "Results" / "resultfiles" / "SALT_Voigt"
     save_dir.mkdir(parents=True, exist_ok=True)  # <-- ensure directory exists
-    file_path = save_dir / "all_lines_pixel_corrected.txt"
+    file_path = save_dir / "ca4226.txt"
     # Now save (np.savetxt accepts Path in recent NumPy; str(...) is universally safe)
     np.savetxt(str(file_path), averages, fmt="%.6f")  # adjust fmt & array as needed
     # rv variations with time plotting
@@ -1799,7 +1807,7 @@ if mike_direct:
     # fig, ax = plt.subplots(figsize=(6, 20))
 
     for files_list in (mike_r_files, mike_b_files):
-        for j in files_list:
+        for j in mike_b_files:
             order, wav, flux, snr, OBJECT, time = read_mike_spec(j)
 
             xwav_list = np.empty(len(order), dtype=object)
@@ -1813,7 +1821,7 @@ if mike_direct:
                 # then call data processing
                 for o in order:
                     xwav, padded_flux, moving_avg = process_data_mike_gaussian(
-                        wav[o - 1], flux[o - 1], r_lines
+                        wav[o - 1], flux[o - 1], b_lines
                     )
                     errors = calculate_error(padded_flux)
 
@@ -1835,13 +1843,13 @@ if mike_direct:
                     moving_avg_list,
                     errors_list,
                     snr_list,
-                    r_lines,
+                    b_lines,
                     time,
                     n,
                     mike_blue_plot_dir,
                 )
                 # now need to add to directories of wavelengths, flux_results, best_fits,snrs, line depths
-
+                
                 # Then find the atmospheric correction- don't need to do this as we have the stabilities
                 # rv_corr,corr_err,ax = Gaussian(xskywav,sky_padded_flux,sky_moving_avg,sky_errors,sky_lines,skytime,n,ax)
                 if np.isnan(rv):  # or np.isnan(rv_corr):
@@ -1898,7 +1906,7 @@ if mike_direct:
     base = Path("C:/Users/OmriNolan/OneDrive - SUPER-SHARP Space Systems Limited/Documents")
     save_dir = base / "Paper_project" / "Results" / "resultfiles" / "MIKE_Voigt"
     save_dir.mkdir(parents=True, exist_ok=True)  # <-- ensure directory exists
-    file_path = save_dir / "all_lines_pixel_corrected.txt"
+    file_path = save_dir / "mg_4481.txt"
     # Now save (np.savetxt accepts Path in recent NumPy; str(...) is universally safe)
     np.savetxt(str(file_path), averages, fmt="%.6f")  # adjust fmt & array as needed
     # rv variations with time plotting
@@ -1935,8 +1943,7 @@ if mike_direct:
 if salt_selfcc:
     window_size = 100.0
     wav_reference, flux_reference, ref_time, ref_object = Get_Wavelength_Flux_File(
-        r"Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\Data\SALT\WD1929+012\\2017-1-SCI-031.20170706\\product\\._mbgphR201707060020_uwm.fits"
-        )
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Data\SALT\WD1929+012\2017-1-SCI-031.20170706\product\mbgphH201707060020_uwm.fits")
     # could also use this as the best: /data/wdplanetary/omri/Data/WD1929+012/2017-1-SCI-031.20170730/product/mbgphH201707300036_u2wm.fits
     time_strings = [(ref_time)]
     vels = [(0)]
@@ -1944,7 +1951,7 @@ if salt_selfcc:
     snr_cutoff = 8
     for i in b_files:
         wav_observed, flux_observed, obs_time, obs_object = Get_Wavelength_Flux_File(i)
-        if obs_object.startswith(str(ref_object)):
+        if obs_object.startswith(str(star)):
             snr = np.median(flux_observed) / (np.std(flux_observed))
             # print(snr)
             rv_max, sigma = RVCC(
@@ -1965,14 +1972,12 @@ if salt_selfcc:
     times = t_list.datetime
     t0 = times[0]
     tdays = [(dt - t0).days for dt in times]
-    mean = np.nanmean(rvs)
-    print(mean)
     tarray = np.array(tdays)
-    rvarray = np.array(rvs)
+    rvarray = np.array(vels)
     rverrsarray = np.array(rverrs)
     # rvcorrsarray = np.array(rv_corrs)
     # rverrsarray = np.full(len(tarray),2)
-    filtered_indices = np.where((rverrsarray < 20) & (rvarray > 30) & (rvarray < 45))[
+    filtered_indices = np.where((rverrsarray < 15) & (rvarray > -10) & (rvarray < 10))[
         0
     ]  # & (rvarray > 10)
     filtered_rvarray = rvarray[filtered_indices]
@@ -1996,12 +2001,12 @@ if salt_selfcc:
     # averages = averages[np.isnan(averages[:,1])]
     print(f"Averages are: {averages}")  #
     print("Time          ,RVs          ,Errors        ") 
-    print(f"{rvs}")
+    #print(f"{}")
     # Build the target directory and file path robustly
     base = Path("C:/Users/OmriNolan/OneDrive - SUPER-SHARP Space Systems Limited/Documents")
     save_dir = base / "Paper_project" / "Results" / "resultfiles" / "SALT_SelfCCF"
     save_dir.mkdir(parents=True, exist_ok=True)  # <-- ensure directory exists
-    file_path = save_dir / "bluespec.txt"
+    file_path = save_dir / "all_lines.txt"
     # Now save (np.savetxt accepts Path in recent NumPy; str(...) is universally safe)
     np.savetxt(str(file_path), averages, fmt="%.6f")  # adjust fmt & array as needed
     # rv variations with time plotting
@@ -2097,7 +2102,7 @@ if mike_selfcc:
     rverrsarray = np.array(rverrs)
     # rvcorrsarray = np.array(rv_corrs)
     # rverrsarray = np.full(len(tarray),2)
-    filtered_indices = np.where((rverrsarray < 20) & (rvarray > 30) & (rvarray < 45))[
+    filtered_indices = np.where((rverrsarray < 20) & (rvarray > -10) & (rvarray < 10))[
         0
     ]  # & (rvarray > 10)
     filtered_rvarray = rvarray[filtered_indices]
@@ -2108,6 +2113,9 @@ if mike_selfcc:
     print(filtered_mean)
     unique_times = np.unique(filtered_tarray)
     averages_unfiltered = np.array([tarray, rvarray, rverrsarray])
+    #print(f"t is :{unique_times}")
+    #print(f"filtered rvs is :{filtered_rvarray}")
+    #print(f"errs are  :{filtered_rverrsarray}")
     averages = np.array(
         [
             [
@@ -2121,7 +2129,7 @@ if mike_selfcc:
     # averages = averages[np.isnan(averages[:,1])]
     print(f"Averages are: {averages}")  #
     print("Time          ,RVs          ,Errors        ") 
-    print(f"{rvs}")
+    print(f"RVS are: {rvs}")
     # Build the target directory and file path robustly
     base = Path("C:/Users/OmriNolan/OneDrive - SUPER-SHARP Space Systems Limited/Documents")
     save_dir = base / "Paper_project" / "Results" / "resultfiles" / "MIKE_SelfCCF"
@@ -2160,7 +2168,7 @@ if mike_selfcc:
 ####SALT Model CCF Running and plotting
 if salt_modelcc:
     # Runfile for the cross-correlation with the model spectrum
-    star = "WD1929+012"
+    star = "WD1929"
     # import the Koester model
     data_path = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\\Documents\\Paper_project\\Code\\RadVel\\da21000_800.dk.dat.txt"
     wavelengths = []
@@ -2226,7 +2234,7 @@ if salt_modelcc:
     rverrsarray = np.array(rverrs)
     # rvcorrsarray = np.array(rv_corrs)
     # rverrsarray = np.full(len(tarray),2)
-    filtered_indices = np.where((rverrsarray < 20) & (rvarray > 30) & (rvarray < 45))[
+    filtered_indices = np.where((rverrsarray < 15) & (rvarray > 25) & (rvarray < 45))[
         0
     ]  
     print(f"filtered indicies are: {filtered_indices}")# & (rvarray > 10)
@@ -2254,105 +2262,15 @@ if salt_modelcc:
     print(f"{rvs}")
     # Build the target directory and file path robustly
     base = Path("C:/Users/OmriNolan/OneDrive - SUPER-SHARP Space Systems Limited/Documents")
-    save_dir = base / "Paper_project" / "Results" / "resultfiles" / "SALT_SelfCCF"
+    save_dir = base / "Paper_project" / "Results" / "resultfiles" / "SALT_ModelCCF"
     save_dir.mkdir(parents=True, exist_ok=True)  # <-- ensure directory exists
-    file_path = save_dir / "bluespec.txt"
+    file_path = save_dir / "all_lines.txt"
     # Now save (np.savetxt accepts Path in recent NumPy; str(...) is universally safe)
     np.savetxt(str(file_path), averages, fmt="%.6f")  # adjust fmt & array as needed
     # rv variations with time plotting
     #file_path = save_dir / "voigt_fitting.txt"
 
-    times = []
-    delta_rvs = []
-    errors = []
-    frequencies = []
-    powers = []
-    # normal textfiles:
-    #data = np.loadtxt(file_path, delimiter=",")
-    data = averages
-    
-    # data = np.delete((data), [2],axis = 0)
-    salt_modelccf_t = data[:, 0]  # First column
-    salt_modelccf_mean = np.nanmean(data[:, 1])
-    salt_modelccf_v = data[:, 1] # Second column
-    salt_modelccf_errs = data[:, 2]  # Third column
-    salt_modelccf_variance = np.var(salt_modelccf_v)  # + np.mean(errs)**2
-    salt_modelccf_stdev = np.sqrt(salt_modelccf_variance)
-    # frequencies = np.linspace(1.95,2.05,3000)
-    salt_modelccf_frequencies = np.linspace(0.001, 5, 3000)
-    salt_modelccf_powers = LombScargle(salt_modelccf_t, salt_modelccf_v, salt_modelccf_errs).power(salt_modelccf_frequencies)
-    print("*****************")
-    print(salt_modelccf_t)
-    
-    # plotting for the model_ cross_correlation
-    tarray = np.array(salt_modelccf_t)
-    rvarray = np.array(salt_modelccf_v)
-    rverrsarray = np.array(salt_modelccf_errs)
 
-    # rverrsarray = np.full(len(tarray),2)
-
-    """ filtered_indices = np.where((rverrsarray < 100) & (rvarray > 0))[0] #& (rvarray > 10)
-    filtered_rvarray = rvarray[filtered_indices]
-    filtered_tarray = tarray[filtered_indices]
-    filtered_rverrsarray = rverrsarray[filtered_indices]
-    filtered_rvcorrsarray = rvcorrsarray[filtered_indices] """
-
-    
-    unique_times = np.unique(tarray)
-
-    averages = np.array(
-        [
-            [t, np.nanmean(rvarray[tarray == t]), np.nanmean(rverrsarray[tarray == t])]
-            for t in unique_times
-        ]
-    )
-    # averages = averages[np.isnan(averages[:,1])]
-
-    # print(averages)
-    file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_model_mg4481_bothlines_results.txt"
-    np.savetxt(file_name, averages, delimiter=",", fmt="%f")
-
-    # Radial Velocity variations with time plot
-
-    t = averages[:, 0]
-    v = averages[:, 1]
-    mean = np.mean(v)
-    v = v - np.mean(v)
-    # errs = np.full(len(v),0.2)
-    errs = averages[:, 2] + 0.2
-    stdev = np.std(v)
-
-    """ fig, (ax_t, ax_w) = plt.subplots(2, 1,figsize = (10,6), constrained_layout=True)
-    ax_t.errorbar(t, y, yerr=dy, fmt='b+', label='Data with Errors')
-    ax_t.set_xlabel('Time [days]')
-    ax_t.legend()
-
-    ax_w.plot(frequency, power)
-    ax_w.set_xlabel('Angular frequency [rad/days]')
-    ax_w.set_ylabel('Normalized amplitude')
-    plt.show() """
-
-    plt.figure(facecolor="white", figsize=(10, 6))
-    plt.errorbar(t, v, yerr=errs, fmt=".k", lw=0.4)
-    plt.fill_between(t, -stdev, stdev, color="gray", label="1 sigma", alpha=0.4)
-    plt.fill_between(t, -3 * stdev, 3 * stdev, color="gray", label="3 sigma", alpha=0.2)
-    plt.legend()
-    legend_pos = plt.gca().get_legend().get_texts()[0].get_position()
-    plt.text(1200, 3, f"RV mean = {mean:.3g}")
-    plt.text(1200, 2.5, f"sigma = {stdev:.3g}")
-
-
-    plt.xlabel("Time - Days")
-    plt.ylabel("Change in Radial Velocity - km/s")
-    # plt.title("WD1929+012 Radial Velocity variations using Voigt fits - SALT data")
-    plt.text
-    plt.gcf().autofmt_xdate()
-    # plt.xticks(rotation=45)
-    # plt.tight_layout()
-    # plt.ylim(-20,20)
-    # plt.xlim(0,112)
-    plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_CrossCorr_model_4481_bothlines.pdf")
-    plt.show()
 
 
 
@@ -2360,86 +2278,559 @@ if salt_modelcc:
 
 ###################### proper clean plot
 
+if direct_abs_lines_plot: 
+    # rv variations with time plotting
 
-# rv variations with time plotting
-times = []
-delta_rvs = []
-errors = []
-frequencies = []
-powers = []
-# normal textfiles:
-salt_direct_file_name = r"C:\\Users\\OmriNolan\\OneDrive - SUPER-SHARP Space Systems Limited\Documents\\Paper_project\\Results\\resultfiles\\SALT_Voigt\\.txt"
-#mike_direct_file_name = "a"
-salt_directline_data = np.loadtxt(file_name, delimiter=" ")
-print(data)
-# data = np.delete((data), [2],axis = 0)
-t = data[:, 0]  # First column
-mean = np.nanmean(data[:, 1])
-v = data[:, 1] - mean  # Second column
-errs = data[:, 2]  # Third column
-variance = np.var(v)  # + np.mean(errs)**2
-stdev = np.sqrt(variance)
-# frequencies = np.linspace(1.95,2.05,3000)
-frequencies = np.linspace(0.001, 5, 3000)
-powers = LombScargle(t, v, errs).power(frequencies)
-fig, (ax_t, ax_w) = plt.subplots(
-    2, 1, facecolor="white", figsize=(12, 14), constrained_layout=True, dpi=400
-)
-
-ax_t.errorbar(t, v, yerr=errs, fmt=".k", capsize=5, lw=1.5)
-ax_t.fill_between(t, -stdev, stdev, color="gray", label="1 sigma", alpha=0.4)
-ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", label="3 sigma", alpha=0.2)
-ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
-ax_t.legend()
-# ax_t.text(np.max(t)/3, 2.5* stdev, f"RV mean = {mean:.3g} km/s")
-ax_t.text(np.max(t) / 3, 2 * stdev, f"sigma = {stdev:.3g} km/s")
-ax_t.set_xlabel("T - Days")
-ax_t.set_ylabel("ΔRV - km/s")
-
-normalized_powers = powers / (np.max(np.abs(powers)))
-ax_w.plot(frequencies, normalized_powers)
-ax_w.set_xlabel("Angular frequency [Periods/days]")
-ax_w.set_ylabel("Normalized Power")
-ax_w.tick_params(axis="x")
-ax_w.tick_params(axis="y")
-# Identify significant peaks (you can set your own threshold here)
-threshold = 0.3  # Adjust as needed
-significant_peak_indices = np.where(normalized_powers >= threshold)[0]
-print(significant_peak_indices)
-print(frequencies[1])
-significant_peaks = np.array(frequencies[significant_peak_indices])
-
-# Estimate false alarm rate for each peak
-false_alarm_rates = []
-for peak_freq in significant_peaks:
-    # Use your preferred method to estimate false alarm rate here
-    # Example: Monte Carlo simulations
-    num_simulations = 400  # Adjust as needed
-    peak_heights_simulated = []
-    for _ in range(num_simulations):
-        simulated_data = np.random.normal(0, 1, len(t))  # Generate random noise
-        simulated_power = LombScargle(t, simulated_data, errs).power([peak_freq])
-        peak_heights_simulated.append(simulated_power[0])
-    false_alarm_rate = (
-        np.sum(
-            peak_heights_simulated
-            >= normalized_powers[np.where(frequencies == peak_freq)]
-        )
-        / num_simulations
+    times = []
+    delta_rvs = []
+    errors = []
+    frequencies = []
+    powers = []
+    # Normal text files
+    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\ca4226_si5055_si6347_mg4481.txt"
+    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_Voigt\all_lines.txt"
+    # Load data
+    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
+    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
+        # Apply SALT time offset
+    salt_directline_data[:, 0] += 2577  # days calculation
+    mean = np.nanmean(mike_directline_data[:, 1])
+    mike_directline_data[:, 1] = mike_directline_data[:, 1] - mean
+    print(f"salt abs lines mean is {mean}")
+    mean = np.nanmean(salt_directline_data[:, 1])
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    print(f"mike abs lines mean is {mean}")
+    # Combine for global statistics + periodogram
+    data = np.vstack((mike_directline_data, salt_directline_data))
+    # Global values
+    t = data[:, 0]
+    mean = np.nanmean(data[:, 1])
+    v = data[:, 1] - mean
+    errs = data[:, 2]
+    variance = np.var(v)  # + np.mean(errs)**2 if needed
+    stdev = np.sqrt(variance)
+    # Lomb–Scargle periodogram
+    frequencies = np.linspace(0.001, 5, 3000)
+    powers = LombScargle(t, v, errs).power(frequencies)
+    # Split datasets for plotting
+    t_mike = mike_directline_data[:, 0]
+    v_mike = mike_directline_data[:, 1] - mean
+    e_mike = mike_directline_data[:, 2]
+    t_salt = salt_directline_data[:, 0]
+    v_salt = salt_directline_data[:, 1] - mean
+    e_salt = salt_directline_data[:, 2]
+    # Figure
+    fig, (ax_t, ax_w) = plt.subplots(
+        2, 1,
+        facecolor="white",
+        figsize=(10, 6),
+        constrained_layout=True,
+        dpi=100
     )
-    false_alarm_rates.append(false_alarm_rate)
+    # === Time–RV plot ===
+        
+    # MIKE: orange circles
+    ax_t.errorbar(
+        t_mike, v_mike, yerr=e_mike,
+        fmt="o", color="tab:orange",
+        capsize=4, lw=1.3, label="MIKE"
+    )
 
-# Print significant peaks and their corresponding false alarm rates
-print("Significant Peaks:")
-for i, freq in enumerate(significant_peaks):
-    print(f"Frequency: {freq}, False Alarm Rate: {false_alarm_rates[i]}")
+    # SALT: blue diamonds
+    ax_t.errorbar(
+        t_salt, v_salt, yerr=e_salt,
+        fmt="D", color="tab:blue",
+        capsize=4, lw=1.3, label="SALT"
+    )
 
-os.makedirs(
-    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/", exist_ok=True
-)
-# plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/DeltaRV_files/SALT/Self_crosscorr/firstrun.pdf")
-plt.show()
+    # Sigma regions
+    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
+    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
+    # Zero line
+    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    # Labels / legend
+    ax_t.set_xlabel("T - Days")
+    ax_t.set_ylabel("ΔRV - km/s")
+    print(f"abs lines stdev is: {stdev}")
+    #ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
+    ax_t.legend()
+    # === Periodogram plot ===
+    normalized_powers = powers / np.max(np.abs(powers))
+    ax_w.plot(frequencies, normalized_powers, color="black")
+    ax_w.set_xlabel("Angular frequency [Periods/days]")
+    ax_w.set_ylabel("Normalized Power")
+    ax_w.tick_params(axis="x")
+    ax_w.tick_params(axis="y")
+    # Save + show
+    plt.savefig(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Direct_fitting_absorption_lines\direct_fitting_abs_lines_rvs.pdf",
+        dpi=400
+    )
+    plt.show()
+    plt.close()
 
+
+
+if direct_all_lines_plot: 
+    # rv variations with time plotting
+
+    times = []
+    delta_rvs = []
+    errors = []
+    frequencies = []
+    powers = []
+    # Normal text files
+    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\all_lines_plus_balmer.txt"
+    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_Voigt\all_lines_plus_balmer.txt"
+    # Load data
+    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
+    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
+        # Apply SALT time offset
+    salt_directline_data[:, 0] += 2577  # days calculation
+    mean = np.nanmean(mike_directline_data[:, 1])
+    mike_directline_data[:, 1] = mike_directline_data[:, 1] - mean
+    print(f"salt all lines mean is {mean}")
+    mean = np.nanmean(salt_directline_data[:, 1])
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    print(f"mike all lines mean is {mean}")
+    # Combine for global statistics + periodogram
+    data = np.vstack((mike_directline_data, salt_directline_data))
+    # Global values
+    t = data[:, 0]
+    mean = np.nanmean(data[:, 1])
+    v = data[:, 1] - mean
+    errs = data[:, 2]
+    variance = np.var(v)  # + np.mean(errs)**2 if needed
+    stdev = np.sqrt(variance)
+    # Lomb–Scargle periodogram
+    frequencies = np.linspace(0.001, 5, 3000)
+    powers = LombScargle(t, v, errs).power(frequencies)
+    # Split datasets for plotting
+    t_mike = mike_directline_data[:, 0]
+    v_mike = mike_directline_data[:, 1] - mean
+    e_mike = mike_directline_data[:, 2]
+    t_salt = salt_directline_data[:, 0]
+    v_salt = salt_directline_data[:, 1] - mean
+    e_salt = salt_directline_data[:, 2]
+    # Figure
+    fig, (ax_t, ax_w) = plt.subplots(
+        2, 1,
+        facecolor="white",
+        figsize=(10, 6),
+        constrained_layout=True,
+        dpi=100
+    )
+    # === Time–RV plot ===
+    
+    # MIKE: orange circles
+    ax_t.errorbar(
+        t_mike, v_mike, yerr=e_mike,
+        fmt="o", color="tab:orange",
+        capsize=4, lw=1.3, label="MIKE"
+    )
+
+    # SALT: blue diamonds
+    ax_t.errorbar(
+        t_salt, v_salt, yerr=e_salt,
+        fmt="D", color="tab:blue",
+        capsize=4, lw=1.3, label="SALT"
+    )
+
+    # Sigma regions
+    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
+    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
+    # Zero line
+    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    # Labels / legend
+    ax_t.set_xlabel("T - Days")
+    ax_t.set_ylabel("ΔRV - km/s")
+    print(f"all lines stdev is: {stdev}")
+    # ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
+    ax_t.legend()
+    # === Periodogram plot ===
+    normalized_powers = powers / np.max(np.abs(powers))
+    ax_w.plot(frequencies, normalized_powers, color="black")
+    ax_w.set_xlabel("Angular frequency [Periods/days]")
+    ax_w.set_ylabel("Normalized Power")
+    ax_w.tick_params(axis="x")
+    ax_w.tick_params(axis="y")
+    # Save + show
+    plt.savefig(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Direct_fitting_all_lines\direct_fitting_all_lines_rvs.pdf",
+        dpi=400
+    )
+    plt.show()
+    plt.close()
+
+
+if direct_single_line_plot: 
+    # rv variations with time plotting
+
+    times = []
+    delta_rvs = []
+    errors = []
+    frequencies = []
+    powers = []
+    # Normal text files
+    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\mg4481.txt"
+    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_Voigt\mg_4481.txt"
+    # Load data
+    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
+    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
+    # Apply SALT time offset
+    salt_directline_data[:, 0] += 2577  # days calculation
+    mean = np.nanmean(mike_directline_data[:, 1])
+    print(f"mike mg4481 mean is {mean}")
+    mike_directline_data[:, 1] = mike_directline_data[:, 1] - mean
+    
+    mean = np.nanmean(salt_directline_data[:, 1])
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    print(f"salt mg4481 mean is {mean}")
+    
+    # Combine for global statistics + periodogram
+    data = np.vstack((mike_directline_data, salt_directline_data))
+    # Global values
+    t = data[:, 0]
+    mean = np.nanmean(data[:, 1])
+    v = data[:, 1] - mean
+    errs = data[:, 2]
+    variance = np.var(v)  # + np.mean(errs)**2 if needed
+    stdev = np.sqrt(variance)
+    # Lomb–Scargle periodogram
+    frequencies = np.linspace(0.001, 5, 3000)
+    powers = LombScargle(t, v, errs).power(frequencies)
+    # Split datasets for plotting
+    t_mike = mike_directline_data[:, 0]
+    v_mike = mike_directline_data[:, 1] - mean
+    e_mike = mike_directline_data[:, 2]
+    t_salt = salt_directline_data[:, 0]
+    v_salt = salt_directline_data[:, 1] - mean
+    e_salt = salt_directline_data[:, 2]
+    # Figure
+    fig, (ax_t, ax_w) = plt.subplots(
+        2, 1,
+        facecolor="white",
+        figsize=(10, 6),
+        constrained_layout=True,
+        dpi=100
+    )
+    # === Time–RV plot ===
+    
+    # MIKE: orange circles
+    ax_t.errorbar(
+        t_mike, v_mike, yerr=e_mike,
+        fmt="o", color="tab:orange",
+        capsize=4, lw=1.3, label="MIKE"
+    )
+
+    # SALT: blue diamonds
+    ax_t.errorbar(
+        t_salt, v_salt, yerr=e_salt,
+        fmt="D", color="tab:blue",
+        capsize=4, lw=1.3, label="SALT"
+    )
+
+    # Sigma regions
+    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
+    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
+    # Zero line
+    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    # Labels / legend
+    ax_t.set_xlabel("T − Days")
+    ax_t.set_ylabel("ΔRV − km/s")
+    print(f"mg4481 stdev is: {stdev}")
+    #ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
+    ax_t.legend()
+    # === Periodogram plot ===
+    normalized_powers = powers / np.max(np.abs(powers))
+    ax_w.plot(frequencies, normalized_powers, color="black")
+    ax_w.set_xlabel("Angular frequency [Periods/days]")
+    ax_w.set_ylabel("Normalized Power")
+    ax_w.tick_params(axis="x")
+    ax_w.tick_params(axis="y")
+    # Save + show
+    plt.savefig(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Direct_fitting_single_lines\direct_fitting_mg4481_rvs.pdf",
+        dpi=400
+    )
+    plt.show()
+    plt.close()
+
+
+
+
+
+    ### ca4226
+
+
+    times = []
+    delta_rvs = []
+    errors = []
+    frequencies = []
+    powers = []
+    # Normal text files
+    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\ca4226.txt"
+    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_Voigt\ca_4226.txt"
+    # Load data
+    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
+    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
+    # Apply SALT time offset
+    salt_directline_data[:, 0] += 2577  # days calculation
+    mean = np.nanmean(mike_directline_data[:, 1])
+    print(f"mike ca4226 mean is {mean}")
+    mike_directline_data[:, 1] = mike_directline_data[:, 1] - mean
+    
+    mean = np.nanmean(salt_directline_data[:, 1])
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    print(f"salt ca4226 mean is {mean}")
+    
+    # Combine for global statistics + periodogram
+    data = np.vstack((mike_directline_data, salt_directline_data))
+    # Global values
+    t = data[:, 0]
+    mean = np.nanmean(data[:, 1])
+    v = data[:, 1] - mean
+    errs = data[:, 2]
+    variance = np.var(v)  # + np.mean(errs)**2 if needed
+    stdev = np.sqrt(variance)
+    # Lomb–Scargle periodogram
+    frequencies = np.linspace(0.001, 5, 3000)
+    powers = LombScargle(t, v, errs).power(frequencies)
+    # Split datasets for plotting
+    t_mike = mike_directline_data[:, 0]
+    v_mike = mike_directline_data[:, 1] - mean
+    e_mike = mike_directline_data[:, 2]
+    t_salt = salt_directline_data[:, 0]
+    v_salt = salt_directline_data[:, 1] - mean
+    e_salt = salt_directline_data[:, 2]
+    # Figure
+    fig, (ax_t, ax_w) = plt.subplots(
+        2, 1,
+        facecolor="white",
+        figsize=(10, 6),
+        constrained_layout=True,
+        dpi=100
+    )
+    # === Time–RV plot ===
+        
+    # MIKE: orange circles
+    ax_t.errorbar(
+        t_mike, v_mike, yerr=e_mike,
+        fmt="o", color="tab:orange",
+        capsize=4, lw=1.3, label="MIKE"
+    )
+
+    # SALT: blue diamonds
+    ax_t.errorbar(
+        t_salt, v_salt, yerr=e_salt,
+        fmt="D", color="tab:blue",
+        capsize=4, lw=1.3, label="SALT"
+    )
+
+    # Sigma regions
+    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
+    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
+    # Zero line
+    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    # Labels / legend
+    ax_t.set_xlabel("T − Days")
+    ax_t.set_ylabel("ΔRV − km/s")
+    print(f"ca4226 stdev is: {stdev}")
+    #ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
+    ax_t.legend()
+    # === Periodogram plot ===
+    normalized_powers = powers / np.max(np.abs(powers))
+    ax_w.plot(frequencies, normalized_powers, color="black")
+    ax_w.set_xlabel("Angular frequency [Periods/days]")
+    ax_w.set_ylabel("Normalized Power")
+    ax_w.tick_params(axis="x")
+    ax_w.tick_params(axis="y")
+    # Save + show
+    plt.savefig(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Direct_fitting_single_lines\direct_fitting_ca4226_rvs.pdf",
+        dpi=400
+    )
+    plt.show()
+    plt.close()
+
+if selfcc_plot:
+        # rv variations with time plotting
+
+    times = []
+    delta_rvs = []
+    errors = []
+    frequencies = []
+    powers = []
+    # Normal text files
+    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_SelfCCF\all_lines.txt"
+    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_SelfCCF\bluespec.txt"
+    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
+    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
+    # Apply SALT time offset
+    salt_directline_data[:, 0] += 2577  # days calculation
+    mean = np.nanmean(salt_directline_data[:, 1])
+    print(f"salt self ccf mean is {mean}")
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    mike_mean = np.nanmean(mike_directline_data[:, 1])
+    print(f"mike self ccf mean is {mike_mean}")
+    # Combine for global statistics + periodogram
+    data = np.vstack((mike_directline_data, salt_directline_data))
+    # Global values
+    t = data[:, 0]
+    mean = np.nanmean(data[:, 1])
+    v = data[:, 1] - mean
+    errs = data[:, 2]
+    variance = np.var(v)  # + np.mean(errs)**2 if needed
+    stdev = np.sqrt(variance)
+    # Lomb–Scargle periodogram
+    frequencies = np.linspace(0.001, 5, 3000)
+    powers = LombScargle(t, v, errs).power(frequencies)
+    # Split datasets for plotting
+    t_mike = mike_directline_data[:, 0]
+    v_mike = mike_directline_data[:, 1] - mean
+    e_mike = mike_directline_data[:, 2]
+    t_salt = salt_directline_data[:, 0]
+    v_salt = salt_directline_data[:, 1] - mean
+    e_salt = salt_directline_data[:, 2]
+    # Figure
+    fig, (ax_t, ax_w) = plt.subplots(
+        2, 1,
+        facecolor="white",
+        figsize=(10, 6),
+        constrained_layout=True,
+        dpi=100
+    )
+    # === Time–RV plot ===
+        
+    # MIKE: orange circles
+    ax_t.errorbar(
+        t_mike, v_mike, yerr=e_mike,
+        fmt="o", color="tab:orange",
+        capsize=4, lw=1.3, label="MIKE"
+    )
+
+    # SALT: blue diamonds
+    ax_t.errorbar(
+        t_salt, v_salt, yerr=e_salt,
+        fmt="D", color="tab:blue",
+        capsize=4, lw=1.3, label="SALT"
+    )
+
+    # Sigma regions
+    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
+    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
+    # Zero line
+    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    # Labels / legend
+    ax_t.set_xlabel("T − Days")
+    ax_t.set_ylabel("ΔRV − km/s")
+    print(f"selfccf stdev is: {stdev}")
+    #ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
+    ax_t.legend()
+    # === Periodogram plot ===
+    normalized_powers = powers / np.max(np.abs(powers))
+    ax_w.plot(frequencies, normalized_powers, color="black")
+    ax_w.set_xlabel("Angular frequency [Periods/days]")
+    ax_w.set_ylabel("Normalized Power")
+    ax_w.tick_params(axis="x")
+    ax_w.tick_params(axis="y")
+    # Save + show
+    plt.savefig(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Self-cc\self_cc_rvs.pdf",
+        dpi=400
+    )
+    plt.show()
+    plt.close()
+
+if modelcc_plot:
+    # rv variations with time plotting
+
+    times = []
+    delta_rvs = []
+    errors = []
+    frequencies = []
+    powers = []
+    # Normal text files
+    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_ModelCCF\all_lines.txt"
+    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_ModelCCF\all_lines.txt.txt"
+    # Load data
+    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
+    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
+    # Apply SALT time offset
+    salt_directline_data[:, 0] += 2577  # days calculation
+    mean = np.nanmean(salt_directline_data[:, 1])
+    print(f"Salt model ccf mean is {mean}")
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    mike_mean = np.nanmean(mike_directline_data[:, 1])
+    print(f"mike model ccf mean is {mike_mean}")
+    # Combine for global statistics + periodogram
+    data = np.vstack((mike_directline_data, salt_directline_data))
+    # Global values
+    t = data[:, 0]
+    mean = np.nanmean(data[:, 1])
+    v = data[:, 1] - mean
+    errs = data[:, 2]
+    variance = np.var(v)  # + np.mean(errs)**2 if needed
+    stdev = np.sqrt(variance)
+    # Lomb–Scargle periodogram
+    frequencies = np.linspace(0.001, 5, 3000)
+    powers = LombScargle(t, v, errs).power(frequencies)
+    # Split datasets for plotting
+    t_mike = mike_directline_data[:, 0]
+    v_mike = mike_directline_data[:, 1] - mean
+    e_mike = mike_directline_data[:, 2]
+    t_salt = salt_directline_data[:, 0]
+    v_salt = salt_directline_data[:, 1] - mean
+    e_salt = salt_directline_data[:, 2]
+    # Figure
+    fig, (ax_t, ax_w) = plt.subplots(
+        2, 1,
+        facecolor="white",
+        figsize=(10, 6),
+        constrained_layout=True,
+        dpi=100
+    )
+    # === Time–RV plot ===
+    
+    # MIKE: orange circles
+    ax_t.errorbar(
+        t_mike, v_mike, yerr=e_mike,
+        fmt="o", color="tab:orange",
+        capsize=4, lw=1.3, label="MIKE"
+    )
+
+    # SALT: blue diamonds
+    ax_t.errorbar(
+        t_salt, v_salt, yerr=e_salt,
+        fmt="D", color="tab:blue",
+        capsize=4, lw=1.3, label="SALT"
+    )
+
+    # Sigma regions
+    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
+    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
+    # Zero line
+    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    # Labels / legend
+    ax_t.set_xlabel("T − Days")
+    ax_t.set_ylabel("ΔRV − km/s")
+    print(f"model ccf stdev is: {stdev}")
+    #ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
+    ax_t.legend()
+    # === Periodogram plot ===
+    normalized_powers = powers / np.max(np.abs(powers))
+    ax_w.plot(frequencies, normalized_powers, color="black")
+    ax_w.set_xlabel("Angular frequency [Periods/days]")
+    ax_w.set_ylabel("Normalized Power")
+    ax_w.tick_params(axis="x")
+    ax_w.tick_params(axis="y")
+    # Save + show
+    plt.savefig(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Model-cc\model_ccf_rvs.pdf",
+        dpi=400
+    )
+    plt.show()
+    plt.close()
 
 
 
@@ -2451,81 +2842,152 @@ plt.show()
 
 #########Violin plots and fit comparisons
 
-
-mg4481 = np.loadtxt(
-    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/voigt_fitting_mg4481.txt", delimiter=","
-)
-crosscorr_bluespec = np.loadtxt(
-    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_bluespec_results.txt",
-    delimiter=",",
-)
-crosscorr_model = np.loadtxt(
-    r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/resultfiles/crosscorrRV_model_mg4481_results.txt",
-    delimiter=",",
-)
-data = np.array(
-    (
-        mg4481[:, 1] - np.mean(mg4481[:, 1]),
-        crosscorr_bluespec[:, 1],
-        crosscorr_model[:, 1] - np.mean(crosscorr_model[:, 1]),
+if salt_violin:
+    mg4481 = np.loadtxt(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\mg4481.txt")
+    all_lines = np.loadtxt(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\all_lines_plus_balmer.txt")
+    crosscorr_bluespec = np.loadtxt(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_SelfCCF\all_lines.txt", delimiter=" ")
+    crosscorr_model = np.loadtxt(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_ModelCCF\all_lines.txt", delimiter=" ")
+    data = np.array(
+        (
+            mg4481[:, 1] - np.mean(mg4481[:, 1]),
+            all_lines[:, 1] - np.mean(all_lines[:, 1]),
+            crosscorr_bluespec[:, 1],
+            crosscorr_model[:, 1] - np.mean(crosscorr_model[:, 1])
+        )
     )
-)
-def adjacent_values(vals, q1, q3):
-    upper_adjacent_value = q3 + (q3 - q1) * 1.5
-    upper_adjacent_value = np.clip(upper_adjacent_value, q3, vals[-1])
+    def adjacent_values(vals, q1, q3):
+        upper_adjacent_value = q3 + (q3 - q1) * 1.5
+        upper_adjacent_value = np.clip(upper_adjacent_value, q3, vals[-1])
 
-    lower_adjacent_value = q1 - (q3 - q1) * 1.5
-    lower_adjacent_value = np.clip(lower_adjacent_value, vals[0], q1)
-    return lower_adjacent_value, upper_adjacent_value
-
-
-def set_axis_style(ax, labels):
-    ax.set_xticks(np.arange(1, len(labels) + 1))
-    ax.set_xticklabels(labels)
-    ax.set_xlim(0.25, len(labels) + 0.75)
-    ax.set_ylabel("Radial Velocity variation (km/s)")
+        lower_adjacent_value = q1 - (q3 - q1) * 1.5
+        lower_adjacent_value = np.clip(lower_adjacent_value, vals[0], q1)
+        return lower_adjacent_value, upper_adjacent_value
 
 
-fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(12, 6), sharey=True)
+    def set_axis_style(ax, labels):
+        ax.set_xticks(np.arange(1, len(labels) + 1))
+        ax.set_xticklabels(labels)
+        ax.set_xlim(0.25, len(labels) + 0.75)
+        ax.set_ylabel("Radial Velocity variation (km/s)")
 
-# ax.set_title('Violin plot')
-parts = ax.violinplot(data, showmeans=False, showmedians=False, showextrema=False)
 
-for pc in parts["bodies"]:
-    pc.set_facecolor("#D43F3A")
-    pc.set_edgecolor("black")
-    pc.set_alpha(1)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(12, 6), sharey=True)
 
-# Initialize lists to store quartiles and adjacent values for each column
-all_quartile1 = []
-all_medians = []
-all_quartile3 = []
-all_whiskers_min = []
-all_whiskers_max = []
+    # ax.set_title('Violin plot')
+    parts = ax.violinplot(data, showmeans=False, showmedians=False, showextrema=False)
 
-# Iterate over each column and calculate quartiles and adjacent values
-for column in data:
-    q1, median, q3 = np.percentile(column, [25, 50, 75])
-    all_quartile1.append(q1)
-    all_medians.append(median)
-    all_quartile3.append(q3)
-    whiskers = adjacent_values(np.sort(column), q1, q3)
-    all_whiskers_min.append(whiskers[0])
-    all_whiskers_max.append(whiskers[1])
+    for pc in parts["bodies"]:
+        pc.set_facecolor("#D43F3A")
+        pc.set_edgecolor("black")
+        pc.set_alpha(1)
 
-inds = np.arange(1, len(all_medians) + 1)
-ax.scatter(inds, all_medians, marker="o", color="white", s=30, zorder=3)
-ax.vlines(inds, all_quartile1, all_quartile3, color="k", linestyle="-", lw=5)
-ax.vlines(inds, all_whiskers_min, all_whiskers_max, color="k", linestyle="-", lw=1)
+    # Initialize lists to store quartiles and adjacent values for each column
+    all_quartile1 = []
+    all_medians = []
+    all_quartile3 = []
+    all_whiskers_min = []
+    all_whiskers_max = []
 
-# set style for the axes
-labels = [
-    "Voigt fit on Mg 4481 line",
-    "Self Cross-Correlation",
-    "Model Cross-Correlation",
-]
-set_axis_style(ax, labels)
+    # Iterate over each column and calculate quartiles and adjacent values
+    for column in data:
+        q1, median, q3 = np.percentile(column, [25, 50, 75])
+        all_quartile1.append(q1)
+        all_medians.append(median)
+        all_quartile3.append(q3)
+        whiskers = adjacent_values(np.sort(column), q1, q3)
+        all_whiskers_min.append(whiskers[0])
+        all_whiskers_max.append(whiskers[1])
 
-plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results/violinplots/voigt_vs_crosscorr.pdf")
-# plt.subplots_adjust(bottom=0.15, wspace=0.05)
-plt.show()
+    inds = np.arange(1, len(all_medians) + 1)
+    ax.scatter(inds, all_medians, marker="o", color="white", s=30, zorder=3)
+    ax.vlines(inds, all_quartile1, all_quartile3, color="k", linestyle="-", lw=5)
+    ax.vlines(inds, all_whiskers_min, all_whiskers_max, color="k", linestyle="-", lw=1)
+
+    # set style for the axes
+    labels = [
+        "Voigt fit on Mg 4481 line",
+        "Multi line Voigt fitting",
+        "Self Cross-Correlation",
+        "Model Cross-Correlation",
+    ]
+    set_axis_style(ax, labels)
+
+    plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\Violin Plots\Salt_methods.pdf")
+    # plt.subplots_adjust(bottom=0.15, wspace=0.05)
+    plt.show()
+    plt.close()
+
+if voigt_comparison:
+    salt = np.loadtxt(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\mg4481.txt")
+    
+    mike = np.loadtxt(
+        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_Voigt\mg_4481.txt")
+    data = np.array(
+        (
+            salt[:, 1] - np.mean(salt[:, 1]),
+            mike[:, 1] - np.mean(mike[:, 1]),
+        )
+    )
+    def adjacent_values(vals, q1, q3):
+        upper_adjacent_value = q3 + (q3 - q1) * 1.5
+        upper_adjacent_value = np.clip(upper_adjacent_value, q3, vals[-1])
+
+        lower_adjacent_value = q1 - (q3 - q1) * 1.5
+        lower_adjacent_value = np.clip(lower_adjacent_value, vals[0], q1)
+        return lower_adjacent_value, upper_adjacent_value
+
+
+    def set_axis_style(ax, labels):
+        ax.set_xticks(np.arange(1, len(labels) + 1))
+        ax.set_xticklabels(labels)
+        ax.set_xlim(0.25, len(labels) + 0.75)
+        ax.set_ylabel("Radial Velocity variation (km/s)")
+
+
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(12, 6), sharey=True)
+
+    # ax.set_title('Violin plot')
+    parts = ax.violinplot(data, showmeans=False, showmedians=False, showextrema=False)
+
+    for pc in parts["bodies"]:
+        pc.set_facecolor("#D43F3A")
+        pc.set_edgecolor("black")
+        pc.set_alpha(1)
+
+    # Initialize lists to store quartiles and adjacent values for each column
+    all_quartile1 = []
+    all_medians = []
+    all_quartile3 = []
+    all_whiskers_min = []
+    all_whiskers_max = []
+
+    # Iterate over each column and calculate quartiles and adjacent values
+    for column in data:
+        q1, median, q3 = np.percentile(column, [25, 50, 75])
+        all_quartile1.append(q1)
+        all_medians.append(median)
+        all_quartile3.append(q3)
+        whiskers = adjacent_values(np.sort(column), q1, q3)
+        all_whiskers_min.append(whiskers[0])
+        all_whiskers_max.append(whiskers[1])
+
+    inds = np.arange(1, len(all_medians) + 1)
+    ax.scatter(inds, all_medians, marker="o", color="white", s=30, zorder=3)
+    ax.vlines(inds, all_quartile1, all_quartile3, color="k", linestyle="-", lw=5)
+    ax.vlines(inds, all_whiskers_min, all_whiskers_max, color="k", linestyle="-", lw=1)
+
+    # set style for the axes
+    labels = [
+        "SALT/HRS",
+        "MIKE/Magellan",
+    ]
+    set_axis_style(ax, labels)
+
+    plt.savefig(r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\Violin Plots\Voigt_comparison.pdf")
+    # plt.subplots_adjust(bottom=0.15, wspace=0.05)
+    plt.show()
+    plt.close()
