@@ -5,11 +5,11 @@ mike_selfcc = False #ready
 salt_modelcc = False #ready
 mike_modelcc = False
 
-direct_abs_lines_plot = False
-direct_all_lines_plot = False
-direct_single_line_plot = False
-selfcc_plot = False
-modelcc_plot = False
+direct_abs_lines_plot = True
+direct_all_lines_plot = True
+direct_single_line_plot = True
+selfcc_plot = True
+modelcc_plot = True
 
 voigt_comparison = True
 salt_violin = True
@@ -2558,101 +2558,6 @@ if direct_single_line_plot:
 
 
 
-
-
-    ### ca4226
-
-
-    times = []
-    delta_rvs = []
-    errors = []
-    frequencies = []
-    powers = []
-    # Normal text files
-    salt_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\SALT_Voigt\ca4226.txt"
-    mike_direct_file_name = r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\resultfiles\MIKE_Voigt\ca_4226.txt"
-    # Load data
-    mike_directline_data = np.loadtxt(mike_direct_file_name, delimiter=" ")
-    salt_directline_data = np.loadtxt(salt_direct_file_name, delimiter=" ")
-    # Apply SALT time offset
-    salt_directline_data[:, 0] += 2577  # days calculation
-    mean = np.nanmean(mike_directline_data[:, 1])
-    print(f"mike ca4226 mean is {mean}")
-    mike_directline_data[:, 1] = mike_directline_data[:, 1] - mean
-    
-    mean = np.nanmean(salt_directline_data[:, 1])
-    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
-    print(f"salt ca4226 mean is {mean}")
-    
-    # Combine for global statistics + periodogram
-    data = np.vstack((mike_directline_data, salt_directline_data))
-    # Global values
-    t = data[:, 0]
-    mean = np.nanmean(data[:, 1])
-    v = data[:, 1] - mean
-    errs = data[:, 2]
-    variance = np.var(v)  # + np.mean(errs)**2 if needed
-    stdev = np.sqrt(variance)
-    # Lomb–Scargle periodogram
-    frequencies = np.linspace(0.001, 5, 3000)
-    powers = LombScargle(t, v, errs).power(frequencies)
-    # Split datasets for plotting
-    t_mike = mike_directline_data[:, 0]
-    v_mike = mike_directline_data[:, 1] - mean
-    e_mike = mike_directline_data[:, 2]
-    t_salt = salt_directline_data[:, 0]
-    v_salt = salt_directline_data[:, 1] - mean
-    e_salt = salt_directline_data[:, 2]
-    # Figure
-    fig, (ax_t, ax_w) = plt.subplots(
-        2, 1,
-        facecolor="white",
-        figsize=(10, 6),
-        constrained_layout=True,
-        dpi=100
-    )
-    # === Time–RV plot ===
-        
-    # MIKE: orange circles
-    ax_t.errorbar(
-        t_mike, v_mike, yerr=e_mike,
-        fmt="o", color="tab:orange",
-        capsize=4, lw=1.3, label="MIKE"
-    )
-
-    # SALT: blue diamonds
-    ax_t.errorbar(
-        t_salt, v_salt, yerr=e_salt,
-        fmt="D", color="tab:blue",
-        capsize=4, lw=1.3, label="SALT"
-    )
-
-    # Sigma regions
-    ax_t.fill_between(t, -stdev, stdev, color="gray", alpha=0.4, label="1σ")
-    ax_t.fill_between(t, -3 * stdev, 3 * stdev, color="gray", alpha=0.2, label="3σ")
-    # Zero line
-    ax_t.axhline(y=0, color="black", linestyle="--", linewidth=1)
-    # Labels / legend
-    ax_t.set_xlabel("T − Days")
-    ax_t.set_ylabel("ΔRV − km/s")
-    print(f"ca4226 stdev is: {stdev}")
-    #ax_t.text(np.max(t) / 3, 2 * stdev, f"σ = {stdev:.3g} km/s")
-    ax_t.legend()
-    # === Periodogram plot ===
-    normalized_powers = powers / np.max(np.abs(powers))
-    ax_w.plot(frequencies, normalized_powers, color="black")
-    ax_w.set_xlabel("Angular frequency [Periods/days]")
-    ax_w.set_ylabel("Normalized Power")
-    ax_w.tick_params(axis="x")
-    ax_w.tick_params(axis="y")
-    # Save + show
-    plt.savefig(
-        r"C:\Users\OmriNolan\OneDrive - SUPER-SHARP Space Systems Limited\Documents\Paper_project\Results\plotstosend\Direct_fitting_single_lines\direct_fitting_ca4226_rvs.pdf",
-        dpi=400
-    )
-    plt.show()
-    plt.close()
-
 if selfcc_plot:
         # rv variations with time plotting
 
@@ -2760,9 +2665,12 @@ if modelcc_plot:
     salt_directline_data[:, 0] += 2577  # days calculation
     mean = np.nanmean(salt_directline_data[:, 1])
     print(f"Salt model ccf mean is {mean}")
-    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    #salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
     mike_mean = np.nanmean(mike_directline_data[:, 1])
     print(f"mike model ccf mean is {mike_mean}")
+
+    salt_directline_data[:, 1] = salt_directline_data[:, 1] - mean
+    mike_directline_data[:, 1] = mike_directline_data[:, 1] - mean
     # Combine for global statistics + periodogram
     data = np.vstack((mike_directline_data, salt_directline_data))
     # Global values
@@ -2855,8 +2763,9 @@ if salt_violin:
             mg4481[:, 1] - np.mean(mg4481[:, 1]),
             all_lines[:, 1] - np.mean(all_lines[:, 1]),
             crosscorr_bluespec[:, 1],
-            crosscorr_model[:, 1] - np.mean(crosscorr_model[:, 1])
-        )
+            crosscorr_model[:, 1] - np.mean(crosscorr_model[:, 1]),
+        ),
+    dtype=object
     )
     def adjacent_values(vals, q1, q3):
         upper_adjacent_value = q3 + (q3 - q1) * 1.5
@@ -2930,7 +2839,8 @@ if voigt_comparison:
         (
             salt[:, 1] - np.mean(salt[:, 1]),
             mike[:, 1] - np.mean(mike[:, 1]),
-        )
+        ),
+        dtype=object
     )
     def adjacent_values(vals, q1, q3):
         upper_adjacent_value = q3 + (q3 - q1) * 1.5
